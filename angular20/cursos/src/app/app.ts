@@ -2,8 +2,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Alumno } from './models/alumno';
-import { AlumnoService } from './services/alumno.service';
+import { Alumno } from './features/alumno/constant/alumno.component';
+import { AlumnoService } from './features/alumno/services/alumno.service';
 
 @Component({
   selector: 'app-root',

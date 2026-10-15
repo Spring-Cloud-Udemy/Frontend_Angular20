@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Alumno, AlumnoPayload } from '../models/alumno';
+import { Alumno, AlumnoPayload } from '../constant/alumno.component';
 
 @Injectable({ providedIn: 'root' })
 export class AlumnoService {
