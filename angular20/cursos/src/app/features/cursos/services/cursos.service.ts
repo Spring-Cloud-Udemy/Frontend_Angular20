@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { CommonService } from '../../shared/common.service';
-import { Curso } from '../constant/cursos.component';
-import { Alumno } from '../../alumno/constant/alumno.component';
-import { Examen } from '../../examenes/constant/examenes.component';
-import { API_BASE } from '../../core/config/api.config';
+import { CommonService } from '../../../shared/common.service';
+import { Curso } from '../models/curso.model';
+import { Alumno } from '../../alumno/models/alumno.model';
+import { Examen } from '../../examenes/models/examen.model';
+import { API_ENDPOINTS } from '../../../core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
 export class CursosService extends CommonService<Curso> {
+  // eslint-disable-next-line @angular-eslint/prefer-inject
   constructor(http: HttpClient) {
-    super(http, `${API_BASE}/cursos`);
+    super(http, API_ENDPOINTS.cursos);
   }
 
   asignarAlumnos(cursoId: number, alumnos: Alumno[]): Observable<Curso> {

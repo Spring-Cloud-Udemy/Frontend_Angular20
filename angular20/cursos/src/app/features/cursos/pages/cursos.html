@@ -1,1 +1,110 @@
-<p>cursos works!</p>
+<main class="courses-page">
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">GESTIÓN ACADÉMICA</span>
+      <h1>Cursos</h1>
+      <p class="page-subtitle">Consulta y organiza los cursos de tu comunidad académica.</p>
+    </div>
+    <button class="refresh-button" type="button" [disabled]="loading()" (click)="cargarCursos()">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20 7v5h-5M4 17v-5h5M5.6 9a7 7 0 0 1 11.6-2L20 12M4 12l2.8 5a7 7 0 0 0 11.6-2" />
+      </svg>
+      {{ loading() ? 'Cargando...' : 'Actualizar' }}
+    </button>
+  </header>
+
+  <section class="overview" aria-label="Resumen de cursos">
+    <article class="overview-card">
+      <span class="overview-label">Cursos registrados</span>
+      <strong>{{ loading() ? '—' : cursos().length }}</strong>
+      <span class="overview-note">Total en el catálogo</span>
+    </article>
+    <article class="overview-card overview-accent">
+      <span class="overview-label">Resultados visibles</span>
+      <strong>{{ loading() ? '—' : filteredCursos().length }}</strong>
+      <span class="overview-note">Según la búsqueda actual</span>
+    </article>
+  </section>
+
+  @if (error()) {
+    <section class="error-panel" role="alert">
+      <div>
+        <strong>No se pudieron cargar los cursos.</strong>
+        <p>{{ error() }}</p>
+      </div>
+      <button type="button" (click)="cargarCursos()">Reintentar</button>
+    </section>
+  }
+
+  <section class="catalog" aria-labelledby="catalog-title">
+    <div class="catalog-header">
+      <div>
+        <h2 id="catalog-title">Catálogo de cursos</h2>
+        <p>Los datos se consultan desde el backend.</p>
+      </div>
+      <label class="search-field">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" />
+          <path d="m16 16 5 5" />
+        </svg>
+        <input
+          type="search"
+          placeholder="Buscar curso..."
+          aria-label="Buscar cursos por nombre"
+          [value]="query()"
+          (input)="onSearchInput($event)"
+        />
+      </label>
+    </div>
+
+    @if (loading()) {
+      <div class="catalog-message" role="status">
+        <span class="spinner"></span>
+        Cargando cursos...
+      </div>
+    } @else if (!error() && filteredCursos().length === 0) {
+      <div class="catalog-message empty-state">
+        <span class="empty-icon" aria-hidden="true">C</span>
+        <strong>{{ query() ? 'No hay cursos que coincidan con la búsqueda.' : 'Aún no hay cursos registrados.' }}</strong>
+        @if (!query()) {
+          <span>Cuando el backend tenga cursos, aparecerán en este catálogo.</span>
+        }
+      </div>
+    } @else if (!error()) {
+      <div class="course-grid">
+        @for (curso of filteredCursos(); track curso.id ?? $index) {
+          <article class="course-card">
+            <div class="course-card-top">
+              <span class="course-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5Zm0 0v16M8 7h8m-8 4h8" />
+                </svg>
+              </span>
+              @if (curso.id !== undefined) {
+                <span class="course-id">ID · {{ curso.id }}</span>
+              }
+            </div>
+            <h3>{{ curso.nombre }}</h3>
+            <p class="course-date">
+              {{ curso.createAT ? (curso.createAT | date:'d MMM, y') : 'Fecha de creación no disponible' }}
+            </p>
+            <div class="course-stats">
+              <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M16 20v-1.5a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4V20m7-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7.7a4 4 0 0 1 0 7.4m5 9.3v-1.5a4 4 0 0 0-3-3.87" />
+                </svg>
+                {{ studentCount(curso) }} alumnos
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5Zm0 0v16M8 7h8m-8 4h8" />
+                </svg>
+                {{ examCount(curso) }} exámenes
+              </span>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>

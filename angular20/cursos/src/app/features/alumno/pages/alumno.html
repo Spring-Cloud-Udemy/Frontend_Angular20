@@ -1,1 +1,117 @@
-<p>alumno works!</p>
+<!-- eslint-disable @angular-eslint/template/click-events-have-key-events -->
+<!-- eslint-disable @angular-eslint/template/interactive-supports-focus -->
+<div class="app-shell">
+  <aside class="sidebar">
+    <a class="brand" routerLink="/alumnos" aria-label="Aula, inicio">
+      <span class="brand-mark">E</span><span class="brand-name">Cursos<span>.</span></span>
+    </a>
+    <div class="workspace-label">ESPACIO DE TRABAJO</div>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <a class="nav-item active" routerLink="/alumnos" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 20v-1.5a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4V20m7-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>
+        <span>Alumnos</span><span class="nav-count">{{ alumnos().length }}</span>
+      </a>
+      <a class="nav-item" routerLink="/cursos"><span>Cursos</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="help-card"><span class="help-icon">?</span><div><strong>¿Necesitas ayuda?</strong><span>Estamos aquí para ti.</span></div></div>
+      <div class="profile"><div class="avatar avatar-admin">AD</div><div class="profile-copy"><strong>Administrador</strong><span>Panel de gestión</span></div></div>
+    </div>
+  </aside>
+
+  <main class="main-content">
+    <header class="topbar">
+      <div class="breadcrumb"><span>Gestión académica</span><span class="breadcrumb-separator">/</span><strong>Alumnos</strong></div>
+      <span class="api-status" [class.api-error]="error()"><span class="status-dot"></span>
+        {{ error() ? 'Sin conexión' : loading() ? 'Conectando...' : 'Sistema conectado' }}
+      </span>
+    </header>
+    <section class="page-content">
+      <div class="page-heading">
+        <div><div class="eyebrow"><span class="eyebrow-line"></span> TU COMUNIDAD ACADÉMICA</div>
+          <h1>Alumnos</h1><p class="page-subtitle">Administra y acompaña a las personas que hacen crecer tu comunidad.</p></div>
+        <button class="primary-button" type="button" (click)="openCreate()">+ Nuevo alumno</button>
+      </div>
+      @if (notice()) { <div class="notice" role="status">{{ notice() }}<button type="button" (click)="notice.set(null)">×</button></div> }
+      @if (error()) {
+        <div class="error-banner" role="alert"><div><strong>No pudimos conectar con el backend.</strong><span>{{ error() }}</span></div>
+          <button class="text-button" type="button" (click)="loadAlumnos()">Reintentar</button></div>
+      }
+      <div class="summary-grid">
+        <article class="summary-card"><span class="summary-label">Alumnos registrados</span>
+          <div class="summary-value">{{ loading() ? '—' : alumnos().length }}</div><div class="summary-foot">Total en el directorio</div></article>
+        <article class="summary-card"><span class="summary-label">Resultados visibles</span>
+          <div class="summary-value">{{ loading() ? '—' : filteredAlumnos().length }}</div><div class="summary-foot">Según tu búsqueda actual</div></article>
+        <article class="summary-card welcome-card"><div class="welcome-copy"><span class="welcome-kicker">UN ESPACIO PARA CRECER</span>
+          <strong>Cada historia<br />comienza aquí.</strong><span>Tu comunidad, en buenas manos.</span></div></article>
+      </div>
+      <section class="directory-card" aria-labelledby="directory-title">
+        <div class="directory-header">
+          <div class="directory-title-group"><div class="section-icon">A</div><div><h2 id="directory-title">Directorio de alumnos</h2>
+            <p>Consulta y organiza los perfiles de tu institución.</p></div></div>
+          <label class="search-box"><input type="search" placeholder="Buscar por nombre o correo..."
+            aria-label="Buscar alumnos por nombre, apellido o correo" [value]="query()" (input)="onSearchInput($event)" /></label>
+        </div>
+        <div class="table-scroll"><table>
+          <thead><tr><th scope="col">ALUMNO</th><th scope="col">CORREO ELECTRÓNICO</th>
+            <th scope="col">FECHA DE REGISTRO</th><th scope="col" class="actions-heading">ACCIONES</th></tr></thead>
+          <tbody>
+            @if (loading()) { <tr><td colspan="4" class="table-message"><span class="spinner"></span> Cargando alumnos...</td></tr> }
+            @else if (filteredAlumnos().length === 0) {
+              <tr><td colspan="4" class="table-message empty-state">
+                <strong>{{ query() ? 'No encontramos resultados' : 'Aún no hay alumnos' }}</strong>
+                <span>{{ query() ? 'Prueba con otro nombre o correo.' : 'Cuando registres alumnos, aparecerán aquí.' }}</span>
+                @if (!query()) { <button type="button" class="text-button" (click)="openCreate()">Registrar el primer alumno</button> }
+              </td></tr>
+            } @else {
+              @for (alumno of filteredAlumnos(); track alumno.id) {
+                <tr><td><div class="student-cell"><div [class]="'avatar student-avatar ' + avatarClass(alumno.id)">{{ initials(alumno) }}</div>
+                  <div class="student-name"><strong>{{ alumno.nombre }} {{ alumno.apellido }}</strong><span>ID · {{ alumno.id }}</span></div></div></td>
+                  <td><a class="email-link" [href]="'mailto:' + alumno.email">{{ alumno.email }}</a></td>
+                  <td class="date-cell">{{ alumno.createAT ? (alumno.createAT | date:'d MMM, y') : '—' }}</td>
+                  <td><div class="row-actions">
+                    <button class="row-action edit-action" type="button" [attr.aria-label]="'Editar a ' + alumno.nombre" (click)="openEdit(alumno)">Editar</button>
+                    <button class="row-action delete-action" type="button" [disabled]="deletingId() === alumno.id" (click)="deleteAlumno(alumno)">
+                      {{ deletingId() === alumno.id ? '…' : 'Eliminar' }}</button>
+                  </div></td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table></div>
+        <footer class="table-footer"><span>Mostrando <strong>{{ filteredAlumnos().length }}</strong> de <strong>{{ alumnos().length }}</strong> alumnos</span>
+          <span class="data-source"><span class="source-dot"></span> Datos sincronizados con Spring Boot</span></footer>
+      </section>
+      <footer class="page-footer"><span>© 2026 Aula. Hecho para aprender juntos.</span><span>Privacidad · Soporte</span></footer>
+    </section>
+  </main>
+</div>
+
+@if (formOpen()) {
+  <div class="drawer-backdrop" (click)="closeForm()" (keydown.escape)="closeForm()">
+    <section class="student-drawer" role="dialog" aria-modal="true" aria-labelledby="form-title" (click)="$event.stopPropagation()">
+      <div class="drawer-header"><div><span class="drawer-kicker">{{ editingId() ? 'ACTUALIZA EL PERFIL' : 'AMPLÍA TU COMUNIDAD' }}</span>
+        <h2 id="form-title">{{ editingId() ? 'Editar alumno' : 'Nuevo alumno' }}</h2>
+        <p>{{ editingId() ? 'Mantén la información al día.' : 'Completa los datos para crear un perfil.' }}</p></div>
+        <button class="icon-button close-button" type="button" aria-label="Cerrar" (click)="closeForm()">×</button></div>
+      <form [formGroup]="alumnoForm" (ngSubmit)="saveAlumno()">
+        <div class="form-avatar"><div class="avatar form-avatar-mark">{{ formInitials() }}</div>
+          <div><strong>Perfil del alumno</strong><span>Información personal y de contacto</span></div></div>
+        <label class="field-label" for="nombre">Nombre</label>
+        <input id="nombre" class="form-input" formControlName="nombre" autocomplete="given-name" placeholder="Ej. Valentina" />
+        @if (alumnoForm.controls.nombre.touched && alumnoForm.controls.nombre.invalid) { <span class="field-error">El nombre es obligatorio.</span> }
+        <label class="field-label" for="apellido">Apellido</label>
+        <input id="apellido" class="form-input" formControlName="apellido" autocomplete="family-name" placeholder="Ej. García" />
+        @if (alumnoForm.controls.apellido.touched && alumnoForm.controls.apellido.invalid) { <span class="field-error">El apellido es obligatorio.</span> }
+        <label class="field-label" for="email">Correo electrónico</label>
+        <input id="email" class="form-input" type="email" formControlName="email" autocomplete="email" placeholder="nombre@correo.com" />
+        @if (alumnoForm.controls.email.touched && alumnoForm.controls.email.invalid) { <span class="field-error">Ingresa un correo electrónico válido.</span> }
+        @if (formError()) { <div class="form-error" role="alert">{{ formError() }}</div> }
+        <div class="drawer-actions"><button class="secondary-button" type="button" [disabled]="saving()" (click)="closeForm()">Cancelar</button>
+          <button class="primary-button" type="submit" [disabled]="saving()">
+            @if (saving()) { Guardando... } @else { {{ editingId() ? 'Guardar cambios' : 'Crear alumno' }} }
+          </button></div>
+      </form>
+    </section>
+  </div>
+}

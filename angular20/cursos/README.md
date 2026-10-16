@@ -14,7 +14,11 @@ Frontend en Angular 20 para consultar y administrar los alumnos del backend Spri
 
 3. Abre `http://localhost:4200`.
 
-El servidor de desarrollo reenvía `/api` al gateway a través de `proxy.conf.json`, así que el navegador no necesita configuración CORS para el desarrollo local.
+El frontend usa `/api` como URL base para mantener las llamadas en el mismo origen. En desarrollo, Angular reenvía esa ruta al gateway mediante `proxy.conf.json`, así que el navegador no necesita configuración CORS local. En producción, configura el servidor web o el ingress para reenviar `/api` al gateway.
+
+La URL base se configura en `src/environments/environment.development.ts` y `src/environments/environment.ts` (`apiUrl`). Angular incorpora estos valores durante el build: cambia el valor de desarrollo si el gateway usa otro host/ruta y el valor de producción si la API no está publicada bajo el mismo origen. No se debe usar `localhost` en el build de producción salvo que el backend realmente se ejecute en el equipo de cada usuario.
+
+El CRUD de alumnos está aislado en `src/app/features/alumno`; `src/app/app.ts` queda como punto de entrada y `src/app/app.routes.ts` delega a las rutas de la funcionalidad.
 
 ## Endpoints utilizados
 
