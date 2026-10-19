@@ -1,0 +1,148 @@
+<div class="app-shell">
+  <main class="detail-page">
+    <a class="back" routerLink="/cursos">← Cursos</a>
+
+    @if (loading()) {
+      <p class="catalog-message" role="status">Cargando curso...</p>
+    } @else if (error() && !curso()) {
+      <section class="error-panel" role="alert">
+        <p>{{ error() }}</p>
+        <button type="button" (click)="cargar()">Reintentar</button>
+      </section>
+    } @else if (curso(); as c) {
+      <header class="page-header">
+        <div>
+          <p class="eyebrow">GESTIÓN ACADÉMICA · CURSO #{{ c.id }}</p>
+          <h1>{{ c.nombre }}</h1>
+        </div>
+      </header>
+
+      @if (error()) {
+        <section class="error-panel" role="alert">{{ error() }}</section>
+      }
+      @if (notice()) {
+        <p class="notice" role="status">{{ notice() }}</p>
+      }
+
+      <section class="stats" aria-label="Resumen del curso">
+        <article class="stat"><span>Alumnos</span><strong>{{ alumnosAsignados().length }}</strong></article>
+        <article class="stat"><span>Exámenes</span><strong>{{ examenesAsignados().length }}</strong></article>
+      </section>
+
+      <div class="tabs" role="tablist" aria-label="Contenido del curso">
+        <button
+          id="alumnos-tab"
+          type="button"
+          role="tab"
+          [class.active]="tab() === 'alumnos'"
+          [attr.aria-selected]="tab() === 'alumnos'"
+          aria-controls="alumnos-panel"
+          (click)="cambiarPestana('alumnos')"
+        >Alumnos</button>
+        <button
+          id="examenes-tab"
+          type="button"
+          role="tab"
+          [class.active]="tab() === 'examenes'"
+          [attr.aria-selected]="tab() === 'examenes'"
+          aria-controls="examenes-panel"
+          (click)="cambiarPestana('examenes')"
+        >Exámenes</button>
+      </div>
+
+      @if (tab() === 'alumnos') {
+        <div id="alumnos-panel" class="two-cols" role="tabpanel" aria-labelledby="alumnos-tab">
+          <section class="panel">
+            <h2>Alumnos asignados</h2>
+            @for (alumno of alumnosAsignados(); track alumno.id) {
+              <div class="row">
+                <span>{{ alumno.nombre }} {{ alumno.apellido }}</span>
+                <button type="button" [disabled]="saving()" (click)="quitarAlumno(alumno)">Quitar</button>
+              </div>
+            } @empty {
+              <p class="empty">Este curso aún no tiene alumnos.</p>
+            }
+          </section>
+
+          <section class="panel">
+            <h2>Alumnos disponibles</h2>
+            @if (cursosError()) {
+              <p class="error-message" role="alert">No se pueden comprobar los cursos donde ya están inscritos los alumnos: {{ cursosError() }}</p>
+            } @else if (alumnosError()) {
+              <p class="error-message" role="alert">{{ alumnosError() }}</p>
+            } @else {
+              @for (alumno of alumnosDisponibles(); track alumno.id) {
+                <label class="row">
+                  <input
+                    type="checkbox"
+                    [checked]="alumnosSeleccionados().has(alumno.id)"
+                    [disabled]="saving()"
+                    (change)="toggleAlumno(alumno.id)"
+                  >
+                  <span>{{ alumno.nombre }} {{ alumno.apellido }}</span>
+                </label>
+              } @empty {
+                <p class="empty">No hay más alumnos para asignar.</p>
+              }
+            }
+            <button
+              type="button"
+              class="primary"
+              [disabled]="saving() || !!cursosError() || !!alumnosError() || alumnosSeleccionados().size === 0"
+              (click)="asignarAlumnos()"
+            >Asignar seleccionados ({{ alumnosSeleccionados().size }})</button>
+          </section>
+        </div>
+      }
+
+      @if (tab() === 'examenes') {
+        <div id="examenes-panel" class="two-cols" role="tabpanel" aria-labelledby="examenes-tab">
+          <section class="panel">
+            <h2>Exámenes asignados</h2>
+            @for (examen of examenesAsignados(); track examen.id) {
+              <div class="row">
+                <span>
+                  <strong>{{ examen.nombre }}</strong>
+                  <small>{{ examen.asignatura.nombre }} · {{ examen.preguntas.length }} preguntas</small>
+                </span>
+                <button type="button" [disabled]="saving()" (click)="quitarExamen(examen)">Quitar</button>
+              </div>
+            } @empty {
+              <p class="empty">Este curso aún no tiene exámenes.</p>
+            }
+          </section>
+
+          <section class="panel">
+            <h2>Exámenes disponibles</h2>
+            @if (examenesError()) {
+              <p class="error-message" role="alert">{{ examenesError() }}</p>
+            } @else {
+              @for (examen of examenesDisponibles(); track examen.id) {
+                <label class="row">
+                  <input
+                    type="checkbox"
+                    [checked]="examenesSeleccionados().has(examen.id)"
+                    [disabled]="saving()"
+                    (change)="toggleExamen(examen.id)"
+                  >
+                  <span>
+                    <strong>{{ examen.nombre }}</strong>
+                    <small>{{ examen.asignatura.nombre }} · {{ examen.preguntas.length }} preguntas</small>
+                  </span>
+                </label>
+              } @empty {
+                <p class="empty">No hay más exámenes para asignar.</p>
+              }
+            }
+            <button
+              type="button"
+              class="primary"
+              [disabled]="saving() || !!examenesError() || examenesSeleccionados().size === 0"
+              (click)="asignarExamenes()"
+            >Asignar seleccionados ({{ examenesSeleccionados().size }})</button>
+          </section>
+        </div>
+      }
+    }
+  </main>
+</div>

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { CommonService } from '../../../shared/common.service';
 import { Curso } from '../models/curso.model';
 import { Alumno } from '../../alumno/models/alumno.model';
-import { Examen } from '../../examenes/models/examen.model';
+import { Examen } from '../../examen/models/examen.model';
 import { API_ENDPOINTS } from '../../../core/config/api.config';
 
 @Injectable({ providedIn: 'root' })

@@ -16,7 +16,7 @@ export const routes: Routes = [
   },
   {
     path: 'examenes',
-    loadChildren: () => import('./features/examenes/examenes.routes').then((module) => module.EXAMENES_ROUTES),
+    loadChildren: () => import('./features/examen/examen.routes').then((module) => module.EXAMENES_ROUTES),
   },
   {
     path: 'respuestas',

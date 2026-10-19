@@ -1,1 +1,10 @@
-<router-outlet />
+<div
+  class="app-layout"
+  [class.sidebar-hidden]="!sidebarPreference.visible()"
+  [class.sidebar-collapsed]="sidebarPreference.visible() && sidebarPreference.collapsed()"
+>
+  <app-menu-sidebar />
+  <div class="app-main">
+    <router-outlet />
+  </div>
+</div>

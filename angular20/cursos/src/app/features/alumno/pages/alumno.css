@@ -14,51 +14,8 @@
 }
 
 .app-shell { min-height: 100vh; }
-.sidebar {
-  position: fixed; inset: 0 auto 0 0; z-index: 2; display: flex; width: 252px;
-  flex-direction: column; padding: 31px 18px 16px; border-right: 1px solid #eff0f5;
-  background: #fff;
-}
-.brand { display: inline-flex; width: fit-content; align-items: center; gap: 10px; margin: 1px 0 49px 9px; }
-.brand-mark {
-  display: grid; width: 36px; height: 36px; place-items: center; border-radius: 12px;
-  background: linear-gradient(145deg, #8976f4, #6552d5); box-shadow: 0 6px 12px #6655d933;
-  color: #fff; font: 800 25px/1 'Segoe UI', sans-serif; transform: rotate(-5deg);
-}
-.brand-name { color: #24243e; font: 800 25px/1 'Segoe UI', sans-serif; letter-spacing: -1.4px; }
-.brand-name span { color: #7768df; }
-.workspace-label { padding: 0 12px; color: #b0b2c2; font-size: 9px; font-weight: 700; letter-spacing: 1.15px; }
-.main-nav { display: grid; gap: 7px; margin-top: 16px; }
-.nav-item {
-  display: flex; min-height: 45px; align-items: center; gap: 12px; padding: 0 12px; border-radius: 9px;
-  color: #787b90; font-size: 13px; font-weight: 600;
-}
-.nav-item svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.7; }
-.nav-item.active { background: #f2f0ff; color: #6554d5; }
-.nav-count {
-  display: grid; min-width: 23px; height: 21px; place-items: center; margin-left: auto; padding: 0 6px;
-  border-radius: 7px; background: #e7e3ff; color: #6554d5; font-size: 10px; font-weight: 700;
-}
-.nav-item-muted { cursor: default; }
-.soon-label { margin-left: auto; color: #b5b6c5; font-size: 8px; font-weight: 700; letter-spacing: .5px; }
-.sidebar-bottom { margin-top: auto; }
-.help-card {
-  display: flex; min-height: 72px; align-items: center; gap: 9px; margin: 0 2px 18px; padding: 12px;
-  border: 1px solid #efeff6; border-radius: 11px; background: #fbfbfe;
-}
-.help-icon { display: grid; width: 27px; height: 27px; flex: 0 0 auto; place-items: center; border-radius: 8px; background: #f0edff; color: #6b5ad9; font-weight: 700; }
-.help-card div, .profile-copy { display: grid; gap: 4px; }
-.help-card strong { color: #42445c; font-size: 10px; }
-.help-card div span { color: #a3a5b5; font-size: 9px; }
-.help-arrow { align-self: flex-start; margin-left: auto; color: #b5b5c4; font-size: 12px; }
-.profile { display: flex; align-items: center; gap: 10px; padding: 15px 6px 2px; border-top: 1px solid #f0f0f5; }
+.main-content { min-height: 100vh; }
 .avatar { display: grid; flex: 0 0 auto; place-items: center; border-radius: 50%; font-weight: 700; }
-.avatar-admin { width: 35px; height: 35px; background: #f7e8dc; color: #b36b3d; font-size: 11px; }
-.profile-copy strong { color: #45475d; font-size: 11px; }
-.profile-copy span { color: #a2a4b3; font-size: 9px; }
-.profile-menu { margin-left: auto; color: #a5a6b4; font-size: 11px; letter-spacing: 2px; }
-
-.main-content { min-height: 100vh; margin-left: 252px; }
 .topbar {
   display: flex; height: 69px; align-items: center; justify-content: space-between; padding: 0 47px;
   border-bottom: 1px solid #eff0f5; background: #fff;
@@ -212,22 +169,12 @@ td { height: 65px; padding: 0 20px; border-top: 1px solid #f2f2f6; color: #66697
   .welcome-card { min-height: 145px; }
 }
 @media (max-width: 1080px) {
-  .sidebar { width: 218px; }
-  .main-content { margin-left: 218px; }
   .topbar { padding: 0 30px; }
   .page-content { padding: 35px 30px 20px; }
   .summary-grid { grid-template-columns: 1fr 1fr; }
   .welcome-card { grid-column: 1 / -1; min-height: 115px; }
 }
 @media (max-width: 760px) {
-  .sidebar { width: 66px; align-items: center; padding: 20px 8px 12px; }
-  .brand { margin: 1px 0 38px; }
-  .brand-mark { width: 36px; height: 36px; }
-  .brand-name, .workspace-label, .nav-item span, .sidebar-bottom, .nav-item-muted { display: none; }
-  .main-nav { width: 100%; margin-top: 0; }
-  .nav-item { justify-content: center; padding: 0; }
-  .nav-item svg { width: 19px; height: 19px; }
-  .main-content { margin-left: 66px; }
   .topbar { height: 58px; padding: 0 18px; }
   .breadcrumb { gap: 8px; font-size: 9px; }
   .topbar-actions { gap: 12px; }

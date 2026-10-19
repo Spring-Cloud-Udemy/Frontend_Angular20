@@ -1,5 +1,5 @@
 import { Alumno } from '../../alumno/models/alumno.model';
-import { Examen } from '../../examenes/models/examen.model';
+import { Examen } from '../../examen/models/examen.model';
 
 export interface CursoAlumno {
   id?: number;

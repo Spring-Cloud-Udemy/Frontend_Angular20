@@ -11,6 +11,8 @@
   --purple: #6655d9;
   --purple-dark: #5442c7;
   --line: #eff0f5;
+  --sidebar-width: 252px;
+  --sidebar-collapsed-width: 72px;
 }
 
 * {

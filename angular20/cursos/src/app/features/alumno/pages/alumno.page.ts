@@ -2,14 +2,15 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
 import { API_BASE } from '../../../core/config/api.config';
 import { Alumno } from '../models/alumno.model';
 import { AlumnoService } from '../services/alumno.service';
 
+
+
 @Component({
   selector: 'app-alumno-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './alumno.html',
 })
 export class AlumnoPage {
@@ -18,6 +19,7 @@ export class AlumnoPage {
   private readonly platformId = inject(PLATFORM_ID);
 
   readonly alumnos = signal<Alumno[]>([]);
+  
   readonly loading = signal(false);
   readonly saving = signal(false);
   readonly deletingId = signal<number | null>(null);

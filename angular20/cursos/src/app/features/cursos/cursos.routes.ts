@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 
 export const CURSOS_ROUTES: Routes = [
-  {
-    path: '',
-    loadComponent: () => import('./pages/cursos.page').then((module) => module.CursosPage),
-  },
+  // Ruta principal para la lista de cursos
+  { path: '', loadComponent: () => import('./pages/cursos.page').then(m => m.CursosPage) },
+
+  // Ruta para el detalle de un curso específico
+  { path: ':id', loadComponent: () => import('./pages/curso-detalle.page').then(m => m.CursoDetallePage) },
 ];
