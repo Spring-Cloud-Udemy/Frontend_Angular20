@@ -1,1 +1,281 @@
-<p>respuestas works!</p>
+<div class="app-shell">
+  <main class="courses-page">
+    <header class="page-header">
+      <div>
+        <span class="eyebrow">GESTIÓN ACADÉMICA</span>
+        <h1>Respuestas</h1>
+        <p class="page-subtitle">
+          Genera respuestas individuales por asignatura hija y estudiante.
+        </p>
+      </div>
+      <div class="header-actions">
+        <button
+          class="edit-course-button"
+          type="button"
+          [disabled]="selectedRespuesta()?.id === undefined || saving() || deleting()"
+          (click)="openEdit()"
+        >
+          Editar respuesta
+        </button>
+        <button
+          class="delete-course-button"
+          type="button"
+          [disabled]="selectedRespuesta()?.id === undefined || saving() || deleting()"
+          (click)="eliminar()"
+        >
+          {{ deleting() ? 'Eliminando...' : 'Eliminar respuesta' }}
+        </button>
+        <button class="create-button" type="button" (click)="openCreate()">+ Nueva respuesta</button>
+      </div>
+    </header>
+
+    @if (selectedRespuesta(); as respuesta) {
+      <p class="selection-status" role="status">
+        Respuesta seleccionada:
+        <strong>{{ nombreAlumno(respuesta.alumnoId) }} · {{ textoPregunta(respuesta.preguntaId) }}</strong>
+      </p>
+    }
+
+    @if (actionError()) {
+      <p class="action-error" role="alert">{{ actionError() }}</p>
+    }
+
+    @if (notice()) {
+      <p class="notice" role="status">{{ notice() }}</p>
+    }
+
+    <section class="overview" aria-label="Resumen de respuestas">
+      <article class="overview-card">
+        <span class="overview-label">Respuestas registradas</span>
+        <strong>{{ loading() ? '—' : respuestas().length }}</strong>
+        <span class="overview-note">Total en MongoDB</span>
+      </article>
+      <article class="overview-card overview-accent">
+        <span class="overview-label">Asignaturas hijas</span>
+        <strong>{{ hijas().length }}</strong>
+        <span class="overview-note">Relación principal del CRUD</span>
+      </article>
+      <article class="overview-card">
+        <span class="overview-label">Resultados visibles</span>
+        <strong>{{ loading() ? '—' : filteredRespuestas().length }}</strong>
+        <span class="overview-note">Según filtros actuales</span>
+      </article>
+    </section>
+
+    @if (error()) {
+      <section class="error-panel" role="alert">
+        <div>
+          <strong>No se pudieron cargar las respuestas.</strong>
+          <p>{{ error() }}</p>
+        </div>
+        <button type="button" (click)="cargarRespuestas()">Reintentar</button>
+      </section>
+    }
+
+    <section class="catalog" aria-labelledby="catalog-title">
+      <div class="catalog-header">
+        <div>
+          <h2 id="catalog-title">Respuestas individuales</h2>
+          <p>Primero elige una asignatura hija; luego el estudiante.</p>
+        </div>
+        <div class="filters">
+          <label>
+            Asignatura hija
+            <select [value]="filtroAsignaturaId()" (change)="onFiltroAsignatura($event)">
+              <option [value]="0">Todas</option>
+              @for (asignatura of hijas(); track asignatura.id) {
+                <option [value]="asignatura.id">
+                  {{ asignatura.padre?.nombre }} / {{ asignatura.nombre }}
+                </option>
+              }
+            </select>
+          </label>
+          <label>
+            Estudiante
+            <select
+              [value]="filtroAlumnoId()"
+              [disabled]="!filtroAsignaturaId()"
+              (change)="onFiltroAlumno($event)"
+            >
+              <option [value]="0">Todos</option>
+              @for (alumno of alumnosAsignatura(); track alumno.id) {
+                <option [value]="alumno.id">{{ alumno.nombre }} {{ alumno.apellido }}</option>
+              }
+            </select>
+          </label>
+          <label class="search-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m16 16 5 5" />
+            </svg>
+            <input
+              type="search"
+              placeholder="Buscar respuesta..."
+              aria-label="Buscar respuestas"
+              [value]="query()"
+              (input)="onSearchInput($event)"
+            />
+          </label>
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="catalog-message" role="status">
+          <span class="spinner"></span>
+          Cargando respuestas...
+        </div>
+      } @else if (!error() && filteredRespuestas().length === 0) {
+        <div class="catalog-message empty-state">
+          <span class="empty-icon" aria-hidden="true">R</span>
+          <strong>{{ query() || filtroAsignaturaId() ? 'No hay respuestas con esos filtros.' : 'Aún no hay respuestas registradas.' }}</strong>
+          @if (!query() && !filtroAsignaturaId()) {
+            <span>Usa el botón Nueva respuesta para registrar una respuesta individual.</span>
+          }
+        </div>
+      } @else if (!error()) {
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ASIGNATURA HIJA</th>
+                <th scope="col">ESTUDIANTE</th>
+                <th scope="col">PREGUNTA</th>
+                <th scope="col">RESPUESTA</th>
+                <th scope="col" class="actions-heading">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (respuesta of filteredRespuestas(); track respuesta.id ?? $index) {
+                <tr [class.selected]="selectedRespuesta()?.id === respuesta.id">
+                  <td>
+                    <button
+                      class="row-select"
+                      type="button"
+                      [attr.aria-pressed]="selectedRespuesta()?.id === respuesta.id"
+                      (click)="seleccionarRespuesta(respuesta)"
+                    >
+                      <span class="subject-cell">
+                        <strong>{{ nombreAsignatura(respuesta.asignaturaId) }}</strong>
+                        <span>ID · {{ respuesta.asignaturaId }}</span>
+                      </span>
+                    </button>
+                  </td>
+                  <td>{{ nombreAlumno(respuesta.alumnoId) }}</td>
+                  <td>{{ textoPregunta(respuesta.preguntaId) }}</td>
+                  <td>{{ respuesta.texto }}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button
+                        class="row-action edit-action"
+                        type="button"
+                        (click)="seleccionarRespuesta(respuesta); openEdit(respuesta)"
+                      >
+                        Editar
+                      </button>
+                      <button
+                        class="row-action delete-action"
+                        type="button"
+                        [disabled]="deleting() && selectedRespuesta()?.id === respuesta.id"
+                        (click)="seleccionarRespuesta(respuesta); eliminar(respuesta)"
+                      >
+                        {{ deleting() && selectedRespuesta()?.id === respuesta.id ? 'Eliminando...' : 'Eliminar' }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </main>
+</div>
+
+@if (modalOpen()) {
+  <div class="form-backdrop">
+    <section
+      class="course-form-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="respuesta-form-title"
+    >
+      <header class="form-dialog-header">
+        <div>
+          <span class="eyebrow">RESPUESTA INDIVIDUAL</span>
+          <h2 id="respuesta-form-title">{{ editing() ? 'Editar respuesta' : 'Nueva respuesta' }}</h2>
+          <p>La asignatura hija determina qué estudiantes pueden responder.</p>
+        </div>
+        <button class="dialog-close" type="button" aria-label="Cerrar" (click)="closeModal()">×</button>
+      </header>
+      <form [formGroup]="respuestaForm" (ngSubmit)="guardar()">
+        <label for="respuesta-asignatura">Asignatura hija</label>
+        <select id="respuesta-asignatura" formControlName="asignaturaId">
+          <option [ngValue]="0">Selecciona una asignatura hija</option>
+          @for (asignatura of hijas(); track asignatura.id) {
+            <option [ngValue]="asignatura.id">
+              {{ asignatura.padre?.nombre }} / {{ asignatura.nombre }}
+            </option>
+          }
+        </select>
+        @if (invalid('asignaturaId')) {
+          <span class="field-error">La asignatura hija es obligatoria.</span>
+        }
+
+        <label for="respuesta-alumno">Estudiante</label>
+        <select id="respuesta-alumno" formControlName="alumnoId">
+          <option [ngValue]="0">Selecciona un estudiante inscrito</option>
+          @for (alumno of alumnosAsignatura(); track alumno.id) {
+            <option [ngValue]="alumno.id">{{ alumno.nombre }} {{ alumno.apellido }}</option>
+          }
+        </select>
+        @if (invalid('alumnoId')) {
+          <span class="field-error">El estudiante es obligatorio.</span>
+        }
+
+        <label for="respuesta-examen">Examen</label>
+        <select id="respuesta-examen" formControlName="examenId">
+          <option [ngValue]="0">Selecciona un examen</option>
+          @for (examen of examenesDeAsignatura(); track examen.id) {
+            <option [ngValue]="examen.id">{{ examen.nombre }}</option>
+          }
+        </select>
+        @if (invalid('examenId')) {
+          <span class="field-error">El examen es obligatorio.</span>
+        }
+
+        <label for="respuesta-pregunta">Pregunta</label>
+        <select id="respuesta-pregunta" formControlName="preguntaId">
+          <option [ngValue]="0">Selecciona una pregunta</option>
+          @for (pregunta of preguntas(); track pregunta.id) {
+            <option [ngValue]="pregunta.id">{{ pregunta.texto }}</option>
+          }
+        </select>
+        @if (invalid('preguntaId')) {
+          <span class="field-error">La pregunta es obligatoria.</span>
+        }
+
+        <label for="respuesta-texto">Texto de la respuesta</label>
+        <textarea
+          id="respuesta-texto"
+          formControlName="texto"
+          rows="3"
+          placeholder="Ej. la respuesta es 2x"
+        ></textarea>
+        @if (invalid('texto')) {
+          <span class="field-error">El texto de la respuesta es obligatorio.</span>
+        }
+
+        @if (formError()) {
+          <p class="form-error" role="alert">{{ formError() }}</p>
+        }
+        <div class="form-actions">
+          <button class="refresh-button" type="button" [disabled]="saving()" (click)="closeModal()">Cancelar</button>
+          <button class="create-button" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Guardando...' : (editing() ? 'Guardar cambios' : 'Crear respuesta') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}

@@ -105,7 +105,7 @@ td { height: 65px; padding: 0 20px; border-top: 1px solid #f2f2f6; color: #66697
 .email-link:hover { color: #6251cf; }
 .date-cell { color: #8e90a1; white-space: nowrap; }
 .row-actions { display: flex; align-items: center; justify-content: center; gap: 5px; }
-.row-action { display: grid; width: 48px; height: 29px; place-items: center; border: 0; border-radius: 7px; background: transparent; color: #999bac; }
+.row-action { display: grid;  height: 29px; place-items: center; border: 0; border-radius: 7px; background: transparent; color: #999bac; }
 .row-action svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.6; }
 .edit-action:hover { background: #f2f0ff; color: #6655d9; }
 .delete-action:hover { background: #fff0f1; color: #d35f6a; }

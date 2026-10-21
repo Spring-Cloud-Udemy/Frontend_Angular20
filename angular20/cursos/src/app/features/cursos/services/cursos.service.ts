@@ -27,6 +27,10 @@ export class CursosService extends CommonService<Curso> {
     return this.http.get<Curso | null>(`${this.baseEndpoint}/alumno/${alumnoId}`);
   }
 
+  obtenerAlumnosPorAsignatura(asignaturaId: number): Observable<Alumno[]> {
+    return this.http.get<Alumno[]>(`${this.baseEndpoint}/asignatura/${asignaturaId}/alumnos`);
+  }
+
   asignarExamenes(cursoId: number, examenes: Examen[]): Observable<Curso> {
     return this.http.put<Curso>(`${this.baseEndpoint}/${cursoId}/asignar-examenes`, examenes);
   }

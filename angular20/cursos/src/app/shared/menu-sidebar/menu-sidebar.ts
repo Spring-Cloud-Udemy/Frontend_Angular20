@@ -6,6 +6,7 @@ import { AlumnoService } from '../../features/alumno/services/alumno.service';
 import { AsignaturaService } from '../../features/asignaturas/services/asignatura.service';
 import { CursosService } from '../../features/cursos/services/cursos.service';
 import { ExamenService } from '../../features/examen/services/examen.service';
+import { RespuestasService } from '../../features/respuestas/services/respuestas.service';
 import { SidebarPreferenceService } from './sidebar-preference.service';
 
 @Component({
@@ -21,6 +22,7 @@ export class MenuSidebar {
   private readonly cursosService = inject(CursosService);
   private readonly examenService = inject(ExamenService);
   private readonly asignaturaService = inject(AsignaturaService);
+  private readonly respuestasService = inject(RespuestasService);
 
   readonly preference = inject(SidebarPreferenceService);
   readonly alumnoCount = signal<number | null>(null);
@@ -28,6 +30,7 @@ export class MenuSidebar {
   readonly countError = signal<string | null>(null);
   readonly examenCount = signal<number | null>(null);
   readonly asignaturaCount = signal<number | null>(null);
+  readonly respuestaCount = this.respuestasService.count;
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
@@ -71,6 +74,10 @@ export class MenuSidebar {
           : ((asignaturas as unknown as { totalElements?: number })?.totalElements ?? 0);
         this.asignaturaCount.set(count);
       },
+      error: (error: unknown) => this.countError.set(describeHttpError(error)),
+    });
+
+    this.respuestasService.listar().subscribe({
       error: (error: unknown) => this.countError.set(describeHttpError(error)),
     });
   }

@@ -26,6 +26,10 @@ export class ExamenService extends CommonService<Examen> {
     return this.http.get<AsignaturaCurso[]>(`${this.baseEndpoint}/asignaturas`);
   }
 
+  obtenerPorPregunta(preguntaId: number): Observable<Examen> {
+    return this.http.get<Examen>(`${this.baseEndpoint}/por-pregunta/${preguntaId}`);
+  }
+
   obtenerAsignaturasEstudiante(estudianteId: number): Observable<AsignaturaCurso[]> {
     return this.http.get<AsignaturaCurso[]>(`${API_BASE}/estudiantes/${estudianteId}/asignaturas`);
   }

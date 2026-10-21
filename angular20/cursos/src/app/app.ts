@@ -5,6 +5,7 @@ import { SidebarPreferenceService } from './shared/menu-sidebar/sidebar-preferen
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [MenuSidebar, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css',

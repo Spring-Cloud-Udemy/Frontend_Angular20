@@ -107,6 +107,19 @@
         </svg>
         <span>Asignaturas</span><span class="nav-count">{{ asignaturaCount() ?? '—' }}</span>
       </a>
+      <a
+        class="nav-item"
+        routerLink="/respuestas"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        title="Respuestas"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 5h14v14H5zM8 9h8M8 12h8M8 15h5" />
+        </svg>
+        <span>Respuestas</span><span class="nav-count">{{ respuestaCount() ?? '—' }}</span>
+      </a>
     </nav>
     @if (countError()) {
       <p class="count-error" role="status">No fue posible actualizar los contadores.</p>
