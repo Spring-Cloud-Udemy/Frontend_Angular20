@@ -52,6 +52,7 @@
                   <td><a class="email-link" [href]="'mailto:' + alumno.email">{{ alumno.email }}</a></td>
                   <td class="date-cell">{{ alumno.createAT ? (alumno.createAT | date:'d MMM, y') : '—' }}</td>
                   <td><div class="row-actions">
+                    <a class="row-action" [routerLink]="['/estudiantes', alumno.id, 'asignaturas']">Asignaturas</a>
                     <button class="row-action edit-action" type="button" [attr.aria-label]="'Editar a ' + alumno.nombre" (click)="openEdit(alumno)">Editar</button>
                     <button class="row-action delete-action" type="button" [disabled]="deletingId() === alumno.id" (click)="deleteAlumno(alumno)">
                       {{ deletingId() === alumno.id ? '…' : 'Eliminar' }}</button>

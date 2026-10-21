@@ -7,24 +7,33 @@
         <p class="page-subtitle">Consulta y organiza los cursos de tu comunidad académica.</p>
       </div>
       <div class="header-actions">
+
+        <!-- Botón para editar curso -->
+
         <button
           class="edit-course-button"
           type="button"
           [disabled]="selectedCurso()?.id === undefined || saving() || deleting()"
           (click)="openEdit()"
         >Editar curso</button>
+
+         <!-- Botón para eliminar curso -->
         <button
           class="delete-course-button"
           type="button"
           [disabled]="selectedCurso()?.id === undefined || saving() || deleting()"
           (click)="eliminarCurso()"
         >{{ deleting() ? 'Eliminando...' : 'Eliminar curso' }}</button>
+
+       <!-- funcion para refrescar dentro cursos
         <button class="refresh-button" type="button" [disabled]="loading()" (click)="cargarCursos()">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M20 7v5h-5M4 17v-5h5M5.6 9a7 7 0 0 1 11.6-2L20 12M4 12l2.8 5a7 7 0 0 0 11.6-2" />
           </svg>
           {{ loading() ? 'Cargando...' : 'Actualizar' }}
         </button>
+        -->
+
         <button class="create-button" type="button" (click)="openCreate()">+ Nuevo curso</button>
       </div>
     </header>

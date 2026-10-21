@@ -2,6 +2,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { API_BASE } from '../../../core/config/api.config';
 import { Alumno } from '../models/alumno.model';
 import { AlumnoService } from '../services/alumno.service';
@@ -10,7 +11,7 @@ import { AlumnoService } from '../services/alumno.service';
 
 @Component({
   selector: 'app-alumno-page',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './alumno.html',
 })
 export class AlumnoPage {

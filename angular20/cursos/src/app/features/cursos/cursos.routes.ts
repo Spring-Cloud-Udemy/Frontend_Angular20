@@ -5,5 +5,5 @@ export const CURSOS_ROUTES: Routes = [
   { path: '', loadComponent: () => import('./pages/cursos.page').then(m => m.CursosPage) },
 
   // Ruta para el detalle de un curso específico
-  { path: ':id', loadComponent: () => import('./pages/curso-detalle.page').then(m => m.CursoDetallePage) },
+  { path: ':id', loadComponent: () => import('../cursos-detalle/pages/curso-detalle.page').then(m => m.CursoDetallePage) },
 ];

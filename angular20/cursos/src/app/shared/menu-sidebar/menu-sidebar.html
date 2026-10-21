@@ -4,6 +4,7 @@
     class="sidebar-open-button"
     aria-label="Mostrar menú"
     title="Mostrar menú"
+    aria-controls="primary-sidebar"
     aria-expanded="false"
     (click)="preference.setVisible(true)"
   >
@@ -13,13 +14,13 @@
   </button>
 }
 
-@if (preference.visible()) {
-  <aside
-    id="primary-sidebar"
-    class="sidebar"
-    [class.collapsed]="preference.collapsed()"
-    [style.width]="preference.collapsed() ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)'"
-  >
+<aside
+  id="primary-sidebar"
+  class="sidebar"
+  [hidden]="!preference.visible()"
+  [class.collapsed]="preference.collapsed()"
+  [style.width]="preference.collapsed() ? 'var(--sidebar-collapsed-width)' : 'var(--sidebar-width)'"
+>
     <div class="sidebar-heading">
       <a class="brand" routerLink="/alumnos" aria-label="Aula, inicio">
         <span class="brand-mark">E</span><span class="brand-name">Cursos<span>.</span></span>
@@ -80,6 +81,19 @@
         </svg>
         <span>Cursos</span><span class="nav-count">{{ cursoCount() ?? '—' }}</span>
       </a>
+      <a
+        class="nav-item"
+        routerLink="/examenes"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        title="Exámenes"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7 3.75h7.5L19 8.25v12H7a2 2 0 0 1-2-2v-13a1.5 1.5 0 0 1 2-1.5ZM14 4v5h5M9 13h6m-6 3h6" />
+        </svg>
+        <span>Exámenes</span><span class="nav-count">{{ examenCount() ?? '—' }}</span>
+      </a>
     </nav>
     @if (countError()) {
       <p class="count-error" role="status">No fue posible actualizar los contadores.</p>
@@ -94,5 +108,4 @@
         <div class="profile-copy"><strong>Administrador</strong><span>Panel de gestión</span></div>
       </div>
     </div>
-  </aside>
-}
+</aside>

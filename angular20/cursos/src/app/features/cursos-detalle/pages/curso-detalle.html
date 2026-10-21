@@ -23,10 +23,17 @@
       @if (notice()) {
         <p class="notice" role="status">{{ notice() }}</p>
       }
+      @if (cursosAsignaturasService.notice()) {
+        <p class="notice" role="status">{{ cursosAsignaturasService.notice() }}</p>
+      }
+      @if (cursosAsignaturasService.actionError()) {
+        <section class="error-panel" role="alert">{{ cursosAsignaturasService.actionError() }}</section>
+      }
 
       <section class="stats" aria-label="Resumen del curso">
         <article class="stat"><span>Alumnos</span><strong>{{ alumnosAsignados().length }}</strong></article>
         <article class="stat"><span>Exámenes</span><strong>{{ examenesAsignados().length }}</strong></article>
+        <article class="stat"><span>Asignaturas</span><strong>{{ totalAsignaturas() }}</strong></article>
       </section>
 
       <div class="tabs" role="tablist" aria-label="Contenido del curso">
@@ -48,6 +55,15 @@
           aria-controls="examenes-panel"
           (click)="cambiarPestana('examenes')"
         >Exámenes</button>
+        <button
+          id="asignaturas-tab"
+          type="button"
+          role="tab"
+          [class.active]="tab() === 'asignaturas'"
+          [attr.aria-selected]="tab() === 'asignaturas'"
+          aria-controls="asignaturas-panel"
+          (click)="cambiarPestana('asignaturas')"
+        >Asignaturas</button>
       </div>
 
       @if (tab() === 'alumnos') {
@@ -143,6 +159,99 @@
           </section>
         </div>
       }
+
+      @if (tab() === 'asignaturas') {
+        <section id="asignaturas-panel" class="panel" role="tabpanel" aria-labelledby="asignaturas-tab">
+          <div class="section-heading">
+            <h2>Asignaturas vinculadas</h2>
+            <button
+              type="button"
+              class="primary"
+              [disabled]="cursosAsignaturasService.saving()"
+              (click)="abrirDialogoAsignaturas()"
+            >Añadir asignaturas</button>
+          </div>
+          @if (cursosAsignaturasService.loading()) {
+            <p class="empty" role="status">Cargando asignaturas...</p>
+          } @else {
+            @for (padre of cursosAsignaturasService.asignaturas(); track padre.id) {
+              <section class="subject-group">
+                <div class="subject-heading">
+                  <h3>{{ padre.nombre }}</h3>
+                  <button
+                    type="button"
+                    [disabled]="cursosAsignaturasService.saving()"
+                    (click)="quitarAsignaturasPadre(padre)"
+                  >Quitar grupo</button>
+                </div>
+                @for (hija of padre.hijos; track hija.id) {
+                  <div class="row">
+                    <span>{{ hija.nombre }}</span>
+                    <button
+                      type="button"
+                      [disabled]="cursosAsignaturasService.saving()"
+                      (click)="quitarAsignatura(hija)"
+                    >Quitar</button>
+                  </div>
+                }
+              </section>
+            } @empty {
+              <p class="empty">Este curso aún no tiene asignaturas.</p>
+            }
+          }
+        </section>
+      }
     }
   </main>
 </div>
+
+<p-dialog
+  header="Añadir asignaturas"
+  [visible]="dialogAsignaturasVisible()"
+  (visibleChange)="dialogAsignaturasVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: 'min(44rem, 95vw)' }"
+>
+  <p>Selecciona asignaturas hijas o marca un grupo para seleccionar todas sus hijas.</p>
+  @if (cursosAsignaturasService.loading()) {
+    <p role="status">Cargando asignaturas disponibles...</p>
+  } @else {
+    <div class="available-subjects">
+      @for (padre of cursosAsignaturasService.disponibles(); track padre.id) {
+        <section class="subject-group">
+          <label class="subject-parent">
+            <input
+              type="checkbox"
+              [checked]="padreSeleccionado(padre)"
+              [disabled]="cursosAsignaturasService.saving()"
+              (change)="toggleAsignaturasPadre(padre)"
+            >
+            <strong>{{ padre.nombre }} (todas)</strong>
+          </label>
+          @for (hija of padre.hijos; track hija.id) {
+            <label class="available-child">
+              <input
+                type="checkbox"
+                [checked]="asignaturasSeleccionadas().has(hija.id)"
+                [disabled]="cursosAsignaturasService.saving()"
+                (change)="toggleAsignatura(hija.id)"
+              >
+              <span>{{ hija.nombre }}</span>
+            </label>
+          }
+        </section>
+      } @empty {
+        <p class="empty">No hay asignaturas disponibles para añadir.</p>
+      }
+    </div>
+  }
+  <ng-template #footer>
+    <button type="button" (click)="dialogAsignaturasVisible.set(false)">Cancelar</button>
+    <button
+      type="button"
+      class="primary"
+      [disabled]="cursosAsignaturasService.saving() || asignaturasSeleccionadas().size === 0"
+      (click)="guardarAsignaturas()"
+    >Añadir seleccionadas ({{ asignaturasSeleccionadas().size }})</button>
+  </ng-template>
+</p-dialog>

@@ -2,21 +2,24 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Observable, catchError, finalize, forkJoin, of, switchMap } from 'rxjs';
+import { DialogModule } from 'primeng/dialog';
 
 import { describeHttpError } from '../../../core/http/http-error.util';
 import { Alumno } from '../../alumno/models/alumno.model';
 import { AlumnoStore } from '../../alumno/services/alumno.store';
 import { Examen } from '../../examen/models/examen.model';
 import { ExamenStore } from '../../examen/services/examen.store';
-import { Curso } from '../models/curso.model';
-import { CursosService } from '../services/cursos.service';
+import { Curso } from '../../cursos/models/curso.model';
+import { AsignaturaCurso } from '../models/asignatura-curso.model';
+import { CursosService } from '../../cursos/services/cursos.service';
+import { CursosAsignaturasService } from '../../cursos/services/cursos-asignaturas.service';
 
-type Pestana = 'alumnos' | 'examenes';
+type Pestana = 'alumnos' | 'examenes' | 'asignaturas';
 
 @Component({
   selector: 'app-curso-detalle-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, DialogModule],
   templateUrl: './curso-detalle.html',
   styleUrl: './curso-detalle.css',
 })
@@ -26,6 +29,7 @@ export class CursoDetallePage {
   private readonly cursosService = inject(CursosService);
   private readonly alumnoStore = inject(AlumnoStore);
   private readonly examenStore = inject(ExamenStore);
+  readonly cursosAsignaturasService = inject(CursosAsignaturasService);
 
   private readonly cursoId = Number(this.route.snapshot.paramMap.get('id'));
 
@@ -44,6 +48,8 @@ export class CursoDetallePage {
   // Selección múltiple en las listas de "disponibles"
   readonly alumnosSeleccionados = signal<ReadonlySet<number>>(new Set());
   readonly examenesSeleccionados = signal<ReadonlySet<number>>(new Set());
+  readonly asignaturasSeleccionadas = signal<ReadonlySet<number>>(new Set());
+  readonly dialogAsignaturasVisible = signal(false);
 
   // Lo que ya pertenece al curso
   readonly alumnosAsignados = computed(() => {
@@ -59,6 +65,9 @@ export class CursoDetallePage {
     return this.alumnoStore.alumnos().filter((alumno) => idsAsignados.has(alumno.id));
   });
   readonly examenesAsignados = computed(() => this.curso()?.examenes ?? []);
+  readonly totalAsignaturas = computed(() =>
+    this.cursosAsignaturasService.asignaturas().reduce((total, padre) => total + padre.hijos.length, 0),
+  );
 
   // Lo que se puede asignar: catálogo completo menos lo ya asignado
   readonly alumnosDisponibles = computed(() => {
@@ -97,6 +106,7 @@ export class CursoDetallePage {
   cargar(): void {
     this.loading.set(true);
     this.error.set(null);
+    this.cursosAsignaturasService.cargar(this.cursoId);
     this.alumnosError.set(null);
     this.cursosError.set(null);
     this.examenesError.set(null);
@@ -138,6 +148,58 @@ export class CursoDetallePage {
 
   cambiarPestana(pestana: Pestana): void {
     this.tab.set(pestana);
+  }
+
+  abrirDialogoAsignaturas(): void {
+    this.asignaturasSeleccionadas.set(new Set());
+    this.cursosAsignaturasService.cargar(this.cursoId);
+    this.dialogAsignaturasVisible.set(true);
+  }
+
+  toggleAsignatura(id: number): void {
+    this.asignaturasSeleccionadas.update((actual) => this.alternar(actual, id));
+  }
+
+  toggleAsignaturasPadre(padre: AsignaturaCurso): void {
+    this.asignaturasSeleccionadas.update((actual) => {
+      const copia = new Set(actual);
+      const todasSeleccionadas = padre.hijos.every((hija) => copia.has(hija.id));
+      for (const hija of padre.hijos) {
+        if (todasSeleccionadas) {
+          copia.delete(hija.id);
+        } else {
+          copia.add(hija.id);
+        }
+      }
+      return copia;
+    });
+  }
+
+  padreSeleccionado(padre: AsignaturaCurso): boolean {
+    return padre.hijos.length > 0 && padre.hijos.every((hija) => this.asignaturasSeleccionadas().has(hija.id));
+  }
+
+  guardarAsignaturas(): void {
+    const seleccionadas = [...this.asignaturasSeleccionadas()];
+    if (seleccionadas.length === 0) {
+      return;
+    }
+    this.cursosAsignaturasService.agregar(this.cursoId, seleccionadas);
+    this.dialogAsignaturasVisible.set(false);
+  }
+
+  quitarAsignatura(asignatura: AsignaturaCurso): void {
+    if (!window.confirm(`¿Quitar "${asignatura.nombre}" de este curso?`)) {
+      return;
+    }
+    this.cursosAsignaturasService.quitar(this.cursoId, asignatura.id);
+  }
+
+  quitarAsignaturasPadre(padre: AsignaturaCurso): void {
+    if (!window.confirm(`¿Quitar todas las asignaturas de "${padre.nombre}" de este curso?`)) {
+      return;
+    }
+    this.cursosAsignaturasService.quitarPadre(this.cursoId, padre.id);
   }
 
   toggleAlumno(id: number): void {

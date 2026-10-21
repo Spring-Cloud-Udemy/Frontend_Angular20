@@ -11,6 +11,13 @@ export const routes: Routes = [
     loadChildren: () => import('./features/alumno/alumno.routes').then((module) => module.ALUMNO_ROUTES),
   },
   {
+    path: 'estudiantes/:id/asignaturas',
+    loadComponent: () =>
+      import('./features/alumno/pages/estudiante-asignaturas.page').then(
+        (module) => module.EstudianteAsignaturasPage,
+      ),
+  },
+  {
     path: 'cursos',
     loadChildren: () => import('./features/cursos/cursos.routes').then((module) => module.CURSOS_ROUTES),
   },

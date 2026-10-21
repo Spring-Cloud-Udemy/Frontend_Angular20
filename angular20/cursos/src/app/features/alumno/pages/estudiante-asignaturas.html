@@ -1,0 +1,53 @@
+<main class="student-subjects">
+  <a routerLink="/alumnos">← Directorio de alumnos</a>
+  <header>
+    <p class="eyebrow">ESPACIO DEL ESTUDIANTE · #{{ estudianteId }}</p>
+    <h1>Mis asignaturas</h1>
+    <p>Asignaturas vinculadas al curso al que perteneces.</p>
+  </header>
+
+  @if (loading()) {
+    <p role="status">Cargando tus asignaturas...</p>
+  } @else if (error()) {
+    <p class="error" role="alert">{{ error() }}</p>
+    <button type="button" (click)="cargarAsignaturas()">Reintentar</button>
+  } @else if (asignaturas().length === 0) {
+    <p class="empty" role="status">Tu curso aún no tiene asignaturas</p>
+  } @else {
+    <div class="subject-layout">
+      <section class="subject-list" aria-label="Asignaturas del curso">
+        @for (padre of asignaturas(); track padre.id) {
+          <section class="subject-group">
+            <h2>{{ padre.nombre }}</h2>
+            @for (hija of padre.hijos; track hija.id) {
+              <button
+                type="button"
+                class="subject-button"
+                [class.selected]="asignaturaSeleccionada()?.id === hija.id"
+                (click)="seleccionarAsignatura(hija)"
+              >{{ hija.nombre }}</button>
+            }
+          </section>
+        }
+      </section>
+      <section class="exams" aria-live="polite">
+        @if (asignaturaSeleccionada(); as asignatura) {
+          <h2>Exámenes de {{ asignatura.nombre }}</h2>
+          @if (loadingExamenes()) {
+            <p role="status">Cargando exámenes...</p>
+          } @else if (examenesError()) {
+            <p class="error" role="alert">{{ examenesError() }}</p>
+          } @else {
+            @for (examen of examenes(); track examen.id) {
+              <article class="exam-row">{{ examen.nombre }}</article>
+            } @empty {
+              <p class="empty">Esta asignatura aún no tiene exámenes.</p>
+            }
+          }
+        } @else {
+          <p class="empty">Selecciona una asignatura para ver sus exámenes.</p>
+        }
+      </section>
+    </div>
+  }
+</main>

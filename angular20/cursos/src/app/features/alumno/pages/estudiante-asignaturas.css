@@ -1,0 +1,84 @@
+.student-subjects {
+  min-height: 100vh;
+  padding: 2.5rem clamp(1rem, 5vw, 4rem);
+  color: #252640;
+  background: #f7f8fc;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.student-subjects > a {
+  color: #6b5bd6;
+}
+
+header {
+  margin: 2rem 0;
+}
+
+.eyebrow {
+  color: #7162d3;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+}
+
+.subject-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.8fr) minmax(20rem, 1.2fr);
+  gap: 1rem;
+}
+
+.subject-list,
+.exams,
+.subject-group {
+  padding: 1.25rem;
+  border: 1px solid #e8e8f0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.subject-group + .subject-group {
+  margin-top: 1rem;
+}
+
+.subject-group h2,
+.exams h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.subject-button {
+  display: block;
+  width: 100%;
+  padding: 0.7rem;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.subject-button:hover,
+.subject-button.selected {
+  background: #f0edff;
+  color: #5949c1;
+}
+
+.exam-row {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f0f0f5;
+}
+
+.empty {
+  color: #777a90;
+}
+
+.error {
+  color: #9e535b;
+}
+
+@media (max-width: 700px) {
+  .subject-layout {
+    grid-template-columns: 1fr;
+  }
+}

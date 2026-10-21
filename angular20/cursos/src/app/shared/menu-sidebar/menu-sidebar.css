@@ -17,6 +17,10 @@
   transition: width 180ms ease;
 }
 
+.sidebar[hidden] {
+  display: none;
+}
+
 .sidebar-heading {
   display: flex;
   align-items: center;
