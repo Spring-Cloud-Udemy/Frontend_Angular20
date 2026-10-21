@@ -26,6 +26,11 @@ export const routes: Routes = [
     loadChildren: () => import('./features/examen/examen.routes').then((module) => module.EXAMENES_ROUTES),
   },
   {
+    path: 'asignaturas',
+    loadChildren: () =>
+      import('./features/asignaturas/asignaturas.routes').then((m) => m.ASIGNATURAS_ROUTES),
+  },
+  {
     path: 'respuestas',
     loadChildren: () => import('./features/respuestas/respuestas.routes').then((module) => module.RESPUESTAS_ROUTES),
   },

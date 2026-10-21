@@ -94,18 +94,29 @@
         </svg>
         <span>Exámenes</span><span class="nav-count">{{ examenCount() ?? '—' }}</span>
       </a>
+      <a
+        class="nav-item"
+        routerLink="/asignaturas"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        ariaCurrentWhenActive="page"
+        title="Asignaturas"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5V6.5A2.5 2.5 0 0 1 6.5 4H20v13H6.5A2.5 2.5 0 0 0 4 19.5ZM8 8h8M8 12h6" />
+        </svg>
+        <span>Asignaturas</span><span class="nav-count">{{ asignaturaCount() ?? '—' }}</span>
+      </a>
     </nav>
     @if (countError()) {
       <p class="count-error" role="status">No fue posible actualizar los contadores.</p>
     }
     <div class="sidebar-bottom">
-      <div class="help-card">
-        <span class="help-icon">?</span>
-        <div><strong>¿Necesitas ayuda?</strong><span>Estamos aquí para ti.</span></div>
-      </div>
+      
       <div class="profile">
         <div class="avatar avatar-admin">AD</div>
-        <div class="profile-copy"><strong>Administrador</strong><span>Panel de gestión</span></div>
+        <div class="profile-copy"><strong>Profesor</strong></div>
       </div>
     </div>
+
 </aside>

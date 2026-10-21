@@ -3,6 +3,7 @@ import { Component, inject, PLATFORM_ID, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { describeHttpError } from '../../core/http/http-error.util';
 import { AlumnoService } from '../../features/alumno/services/alumno.service';
+import { AsignaturaService } from '../../features/asignaturas/services/asignatura.service';
 import { CursosService } from '../../features/cursos/services/cursos.service';
 import { ExamenService } from '../../features/examen/services/examen.service';
 import { SidebarPreferenceService } from './sidebar-preference.service';
@@ -19,12 +20,14 @@ export class MenuSidebar {
   private readonly alumnoService = inject(AlumnoService);
   private readonly cursosService = inject(CursosService);
   private readonly examenService = inject(ExamenService);
+  private readonly asignaturaService = inject(AsignaturaService);
 
   readonly preference = inject(SidebarPreferenceService);
   readonly alumnoCount = signal<number | null>(null);
   readonly cursoCount = signal<number | null>(null);
   readonly countError = signal<string | null>(null);
   readonly examenCount = signal<number | null>(null);
+  readonly asignaturaCount = signal<number | null>(null);
 
   constructor() {
     if (!isPlatformBrowser(this.platformId)) {
@@ -57,6 +60,16 @@ export class MenuSidebar {
           ? examenes.length
           : ((examenes as unknown as { totalElements?: number })?.totalElements ?? 0);
         this.examenCount.set(count);
+      },
+      error: (error: unknown) => this.countError.set(describeHttpError(error)),
+    });
+
+    this.asignaturaService.listar().subscribe({
+      next: (asignaturas) => {
+        const count = Array.isArray(asignaturas)
+          ? asignaturas.length
+          : ((asignaturas as unknown as { totalElements?: number })?.totalElements ?? 0);
+        this.asignaturaCount.set(count);
       },
       error: (error: unknown) => this.countError.set(describeHttpError(error)),
     });

@@ -10,9 +10,9 @@ import { AlumnoStore } from '../../alumno/services/alumno.store';
 import { Examen } from '../../examen/models/examen.model';
 import { ExamenStore } from '../../examen/services/examen.store';
 import { Curso } from '../../cursos/models/curso.model';
-import { AsignaturaCurso } from '../models/asignatura-curso.model';
+import { AsignaturaCurso } from '../../asignaturas/models/asignatura-curso.model';
 import { CursosService } from '../../cursos/services/cursos.service';
-import { CursosAsignaturasService } from '../../cursos/services/cursos-asignaturas.service';
+import { CursosAsignaturasService } from '../../asignaturas/services/cursos-asignaturas.service';
 
 type Pestana = 'alumnos' | 'examenes' | 'asignaturas';
 

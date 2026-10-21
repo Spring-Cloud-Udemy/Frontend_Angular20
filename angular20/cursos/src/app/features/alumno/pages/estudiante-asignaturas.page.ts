@@ -4,7 +4,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { describeHttpError } from '../../../core/http/http-error.util';
-import { AsignaturaCurso } from '../../cursos-detalle/models/asignatura-curso.model';
+import { AsignaturaCurso } from '../../asignaturas/models/asignatura-curso.model';
 import { Examen } from '../../examen/models/examen.model';
 import { ExamenService } from '../../examen/services/examen.service';
 

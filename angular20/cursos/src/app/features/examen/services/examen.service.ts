@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API_BASE, API_ENDPOINTS } from '../../../core/config/api.config';
 import { CommonService } from '../../../shared/common.service';
-import { AsignaturaCurso } from '../../cursos-detalle/models/asignatura-curso.model';
+import { AsignaturaCurso } from '../../asignaturas/models/asignatura-curso.model';
 import { Examen, ExamenInput } from '../models/examen.model';
 
 @Injectable({ providedIn: 'root' })
@@ -13,16 +13,17 @@ export class ExamenService extends CommonService<Examen> {
     super(inject(HttpClient), API_ENDPOINTS.examenes);
   }
 
-  listarAsignaturas(): Observable<AsignaturaCurso[]> {
-    return this.http.get<AsignaturaCurso[]>(`${this.baseEndpoint}/asignaturas`);
-  }
-
+ 
   crearExamen(input: ExamenInput): Observable<Examen> {
     return this.http.post<Examen>(this.baseEndpoint, input);
   }
 
   editarExamen(id: number, input: ExamenInput): Observable<Examen> {
     return this.http.put<Examen>(`${this.baseEndpoint}/${id}`, input);
+  }
+
+  listarAsignaturas(): Observable<AsignaturaCurso[]> {
+    return this.http.get<AsignaturaCurso[]>(`${this.baseEndpoint}/asignaturas`);
   }
 
   obtenerAsignaturasEstudiante(estudianteId: number): Observable<AsignaturaCurso[]> {

@@ -4,10 +4,11 @@ import { Observable, finalize, forkJoin, switchMap } from 'rxjs';
 
 import { API_ENDPOINTS } from '../../../core/config/api.config';
 import { describeHttpError } from '../../../core/http/http-error.util';
-import { AsignaturaCurso } from '../../cursos-detalle/models/asignatura-curso.model';
+import { AsignaturaCurso } from '../models/asignatura-curso.model';
 
 @Injectable({ providedIn: 'root' })
 export class CursosAsignaturasService {
+  
   private readonly http = inject(HttpClient);
   private readonly endpoint = API_ENDPOINTS.cursos;
 
@@ -84,7 +85,7 @@ export class CursosAsignaturasService {
       });
   }
 
-  private cargarListas(cursoId: number) {
+private cargarListas(cursoId: number) {
     return forkJoin({
       asignaturas: this.http.get<AsignaturaCurso[]>(`${this.endpoint}/${cursoId}/asignaturas`),
       disponibles: this.http.get<AsignaturaCurso[]>(
@@ -92,4 +93,5 @@ export class CursosAsignaturasService {
       ),
     });
   }
+
 }

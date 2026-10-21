@@ -3,7 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { describeHttpError } from '../../../core/http/http-error.util';
-import { AsignaturaCurso } from '../../cursos-detalle/models/asignatura-curso.model';
+import { AsignaturaCurso } from '../../asignaturas/models/asignatura-curso.model';
 import {
   EXAMEN_NOMBRE_MAX,
   EXAMEN_NOMBRE_MIN,
@@ -212,13 +212,20 @@ export class ExamenesPage {
 
   private hojasAsignatura(nodos: AsignaturaCurso[]): { id: number; nombre: string }[] {
     const hojas: { id: number; nombre: string }[] = [];
-    for (const nodo of nodos ?? []) {
-      if (nodo.hijos?.length) {
-        hojas.push(...this.hojasAsignatura(nodo.hijos));
-      } else {
-        hojas.push({ id: nodo.id, nombre: nodo.nombre });
+    const seen = new Set<number>();
+    const walk = (items: AsignaturaCurso[]): void => {
+      for (const nodo of items ?? []) {
+        if (nodo.hijos?.length) {
+          walk(nodo.hijos);
+          continue;
+        }
+        if (!seen.has(nodo.id)) {
+          seen.add(nodo.id);
+          hojas.push({ id: nodo.id, nombre: nodo.nombre });
+        }
       }
-    }
+    };
+    walk(nodos);
     return hojas;
   }
 

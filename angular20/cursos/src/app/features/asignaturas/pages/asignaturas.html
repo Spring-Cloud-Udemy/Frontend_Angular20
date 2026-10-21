@@ -1,0 +1,186 @@
+<div class="app-shell">
+  <main class="courses-page">
+    <header class="page-header">
+      <div>
+        <span class="eyebrow">GESTIÓN ACADÉMICA</span>
+        <h1>Asignaturas</h1>
+        <p class="page-subtitle">Consulta y organiza el catálogo de asignaturas padre e hijas.</p>
+      </div>
+      <div class="header-actions">
+        <button class="create-button" type="button" (click)="openCreate()">+ Nueva asignatura</button>
+      </div>
+    </header>
+
+    @if (notice()) {
+      <p class="notice" role="status">{{ notice() }}</p>
+    }
+
+    <section class="overview" aria-label="Resumen de asignaturas">
+      <article class="overview-card">
+        <span class="overview-label">Asignaturas registradas</span>
+        <strong>{{ loading() ? '—' : asignaturas().length }}</strong>
+        <span class="overview-note">Total en el catálogo</span>
+      </article>
+      <article class="overview-card overview-accent">
+        <span class="overview-label">Grupos padre</span>
+        <strong>{{ loading() ? '—' : padresCount() }}</strong>
+        <span class="overview-note">{{ hijasCount() }} asignaturas hijas</span>
+      </article>
+      <article class="overview-card">
+        <span class="overview-label">Resultados visibles</span>
+        <strong>{{ loading() ? '—' : filteredAsignaturas().length }}</strong>
+        <span class="overview-note">Según la búsqueda actual</span>
+      </article>
+    </section>
+
+    @if (error()) {
+      <section class="error-panel" role="alert">
+        <div>
+          <strong>No se pudieron cargar las asignaturas.</strong>
+          <p>{{ error() }}</p>
+        </div>
+        <button type="button" (click)="cargarAsignaturas()">Reintentar</button>
+      </section>
+    }
+
+    <section class="catalog" aria-labelledby="catalog-title">
+      <div class="catalog-header">
+        <div>
+          <h2 id="catalog-title">Catálogo de asignaturas</h2>
+          <p>Los datos se consultan desde el backend.</p>
+        </div>
+        <label class="search-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" />
+            <path d="m16 16 5 5" />
+          </svg>
+          <input
+            type="search"
+            placeholder="Buscar asignatura..."
+            aria-label="Buscar asignaturas por nombre o padre"
+            [value]="query()"
+            (input)="onSearchInput($event)"
+          />
+        </label>
+      </div>
+
+      @if (loading()) {
+        <div class="catalog-message" role="status">
+          <span class="spinner"></span>
+          Cargando asignaturas...
+        </div>
+      } @else if (!error() && filteredAsignaturas().length === 0) {
+        <div class="catalog-message empty-state">
+          <span class="empty-icon" aria-hidden="true">A</span>
+          <strong>{{ query() ? 'No hay asignaturas que coincidan con la búsqueda.' : 'Aún no hay asignaturas registradas.' }}</strong>
+          @if (!query()) {
+            <span>Cuando el backend tenga asignaturas, aparecerán en este catálogo.</span>
+          }
+        </div>
+      } @else if (!error()) {
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">ASIGNATURA</th>
+                <th scope="col">TIPO</th>
+                <th scope="col">PADRE</th>
+                <th scope="col" class="actions-heading">ACCIONES</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (asignatura of filteredAsignaturas(); track asignatura.id) {
+                <tr>
+                  <td>
+                    <div class="subject-cell">
+                      <strong>{{ asignatura.nombre }}</strong>
+                      <span>ID · {{ asignatura.id }}</span>
+                    </div>
+                  </td>
+                  <td>
+                    @if (esPadre(asignatura)) {
+                      <span class="badge badge-padre">Padre</span>
+                    } @else {
+                      <span class="badge badge-hija">Hija</span>
+                    }
+                  </td>
+                  <td>{{ asignatura.padre?.nombre ?? '—' }}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button class="row-action edit-action" type="button" (click)="openEdit(asignatura)">
+                        Editar
+                      </button>
+                      <button
+                        class="row-action delete-action"
+                        type="button"
+                        [disabled]="deletingId() === asignatura.id"
+                        (click)="eliminar(asignatura)"
+                      >
+                        {{ deletingId() === asignatura.id ? 'Eliminando...' : 'Eliminar' }}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    </section>
+  </main>
+</div>
+
+@if (modalOpen()) {
+  <div class="form-backdrop">
+    <section
+      class="course-form-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="asignatura-form-title"
+    >
+      <header class="form-dialog-header">
+        <div>
+          <span class="eyebrow">CATÁLOGO ACADÉMICO</span>
+          <h2 id="asignatura-form-title">{{ editing() ? 'Editar asignatura' : 'Nueva asignatura' }}</h2>
+          <p>
+            {{ editing()
+              ? 'Actualiza el nombre o la asignatura padre.'
+              : 'Completa el nombre. El padre es opcional.' }}
+          </p>
+        </div>
+        <button class="dialog-close" type="button" aria-label="Cerrar" (click)="closeModal()">×</button>
+      </header>
+      <form [formGroup]="asignaturaForm" (ngSubmit)="guardar()">
+        <label for="asignatura-nombre">Nombre de la asignatura</label>
+        <input
+          id="asignatura-nombre"
+          type="text"
+          formControlName="nombre"
+          autocomplete="off"
+          placeholder="Ej. Álgebra"
+        />
+        @if (asignaturaForm.controls.nombre.touched && asignaturaForm.controls.nombre.invalid) {
+          <span class="field-error">El nombre es obligatorio (mínimo 2 caracteres).</span>
+        }
+
+        <label for="asignatura-padre">Asignatura padre (opcional)</label>
+        <select id="asignatura-padre" formControlName="padreId">
+          <option [ngValue]="0">Sin padre (grupo principal)</option>
+          @for (padre of padresDisponibles(); track padre.id) {
+            <option [ngValue]="padre.id">{{ padre.nombre }}</option>
+          }
+        </select>
+
+        @if (formError()) {
+          <p class="form-error" role="alert">{{ formError() }}</p>
+        }
+        <div class="form-actions">
+          <button class="refresh-button" type="button" [disabled]="saving()" (click)="closeModal()">Cancelar</button>
+          <button class="create-button" type="submit" [disabled]="saving()">
+            {{ saving() ? 'Guardando...' : (editing() ? 'Guardar cambios' : 'Crear asignatura') }}
+          </button>
+        </div>
+      </form>
+    </section>
+  </div>
+}
