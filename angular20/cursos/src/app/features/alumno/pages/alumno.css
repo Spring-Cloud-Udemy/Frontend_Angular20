@@ -139,14 +139,6 @@ td { height: 65px; padding: 0 20px; border-top: 1px solid #f2f2f6; color: #66697
 .button-spinner { width: 12px; height: 12px; border-color: #ffffff66; border-top-color: #fff; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.drawer-backdrop { position: fixed; inset: 0; z-index: 5; display: flex; justify-content: flex-end; background: #24233d66; backdrop-filter: blur(2px); }
-.student-drawer { width: min(100%, 430px); height: 100%; overflow-y: auto; padding: 32px; background: #fff; box-shadow: -12px 0 40px #211c3520; animation: slide-in .2s ease-out; }
-@keyframes slide-in { from { transform: translateX(20px); opacity: .7; } to { transform: translateX(0); opacity: 1; } }
-.drawer-header { display: flex; align-items: flex-start; justify-content: space-between; padding-bottom: 22px; border-bottom: 1px solid #f0f0f5; }
-.drawer-kicker { color: #7767d9; font-size: 8px; font-weight: 700; letter-spacing: 1px; }
-.drawer-header h2 { margin-top: 8px; color: #292a45; font: 800 22px 'Segoe UI', sans-serif; letter-spacing: -.5px; }
-.drawer-header p { margin-top: 5px; color: #9698a8; font-size: 10px; }
-.close-button { color: #9698a8; font-size: 23px; }
 .form-avatar { display: flex; align-items: center; gap: 10px; margin: 25px 0; padding: 13px; border: 1px solid #f0eff7; border-radius: 9px; background: #fbfaff; }
 .form-avatar-mark { width: 36px; height: 36px; background: #eeeaff; color: #6453d1; font-size: 11px; }
 .form-avatar > div:last-child { display: grid; gap: 4px; }
@@ -157,11 +149,6 @@ td { height: 65px; padding: 0 20px; border-top: 1px solid #f2f2f6; color: #66697
 .form-input::placeholder { color: #b5b6c3; }
 .form-input:focus { border-color: #a59be9; box-shadow: 0 0 0 3px #f2f0ff; }
 .field-error { display: block; margin-top: 5px; color: #c45460; font-size: 9px; }
-.form-error { margin-top: 17px; padding: 10px; border-radius: 7px; background: #fff3f3; color: #a84f58; font-size: 9px; }
-.drawer-actions { display: flex; justify-content: flex-end; gap: 9px; margin-top: 30px; padding-top: 18px; border-top: 1px solid #f0f0f5; }
-.secondary-button { min-height: 39px; padding: 0 15px; border: 1px solid #e8e9f0; border-radius: 8px; background: #fff; color: #77798d; font-size: 10px; font-weight: 600; }
-.secondary-button:hover:not(:disabled) { background: #fafafd; }
-.drawer-actions .primary-button { min-width: 126px; }
 
 @media (min-width: 1500px) {
   .page-content { padding-top: 52px; }
@@ -209,5 +196,4 @@ td { height: 65px; padding: 0 20px; border-top: 1px solid #f2f2f6; color: #66697
   table { min-width: 620px; }
   .table-footer { align-items: flex-start; flex-direction: column; justify-content: center; gap: 5px; padding: 9px 13px; }
   .page-footer { gap: 12px; font-size: 7px; }
-  .student-drawer { padding: 24px 19px; }
 }

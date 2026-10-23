@@ -138,12 +138,6 @@
                     </svg>
                     {{ studentCount(curso) }} alumnos
                   </span>
-                  <span>
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5Zm0 0v16M8 7h8m-8 4h8" />
-                    </svg>
-                    {{ examCount(curso) }} exámenes
-                  </span>
                 </span>
               </button>
               @if (curso.id !== undefined) {
@@ -158,22 +152,17 @@
 </div>
 
 @if (createOpen()) {
-  <div class="form-backdrop">
-    <section
-      class="course-form-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="course-form-title"
-    >
-      <header class="form-dialog-header">
-        <div>
-          <span class="eyebrow">CATÁLOGO ACADÉMICO</span>
-          <h2 id="course-form-title">{{ editingCurso() ? 'Editar curso' : 'Nuevo curso' }}</h2>
-          <p>{{ editingCurso() ? 'Actualiza el nombre del curso seleccionado.' : 'Completa el nombre para crear el curso.' }}</p>
-        </div>
-        <button class="dialog-close" type="button" aria-label="Cerrar" (click)="closeCreate()">×</button>
-      </header>
-      <form [formGroup]="cursoForm" (ngSubmit)="submitCurso()">
+  <app-form-dialog
+    [abierto]="createOpen()"
+    [titulo]="editingCurso() ? 'Editar curso' : 'Nuevo curso'"
+    [subtitulo]="editingCurso() ? 'Actualiza el nombre del curso seleccionado.' : 'Completa el nombre para crear el curso.'"
+    [textoConfirmar]="editingCurso() ? 'Guardar cambios' : 'Crear curso'"
+    [guardando]="saving()"
+    [error]="formError()"
+    formId="curso-form"
+    (cerrar)="closeCreate()"
+  >
+      <form id="curso-form" [formGroup]="cursoForm" (ngSubmit)="submitCurso()">
         <label for="curso-nombre">Nombre del curso</label>
         <input
           id="curso-nombre"
@@ -185,16 +174,6 @@
         @if (cursoForm.controls.nombre.touched && !cursoForm.controls.nombre.value.trim()) {
           <span class="field-error">El nombre del curso es obligatorio.</span>
         }
-        @if (formError()) {
-          <p class="form-error" role="alert">{{ formError() }}</p>
-        }
-        <div class="form-actions">
-          <button class="refresh-button" type="button" [disabled]="saving()" (click)="closeCreate()">Cancelar</button>
-          <button class="create-button" type="submit" [disabled]="saving()">
-            {{ saving() ? 'Guardando...' : (editingCurso() ? 'Guardar cambios' : 'Crear curso') }}
-          </button>
-        </div>
       </form>
-    </section>
-  </div>
+  </app-form-dialog>
 }

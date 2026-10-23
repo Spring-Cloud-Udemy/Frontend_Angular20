@@ -1,0 +1,273 @@
+.form-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1300;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: #20233c66;
+}
+
+.drawer-backdrop {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
+  backdrop-filter: blur(2px);
+}
+
+.course-form-dialog {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 460px);
+  max-height: 90vh;
+  padding: 24px;
+  border: 1px solid #ededf4;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 18px 60px #20233c29;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.student-drawer {
+  width: min(100%, 430px);
+  height: 100%;
+  max-height: none;
+  overflow-y: auto;
+  padding: 32px;
+  border: 0;
+  border-radius: 0;
+  box-shadow: -12px 0 40px #211c3520;
+  animation: slide-in 0.2s ease-out;
+}
+
+.eyebrow {
+  color: #7162d3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.form-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.student-drawer .form-dialog-header {
+  padding-bottom: 22px;
+  border-bottom: 1px solid #f0f0f5;
+}
+
+.student-drawer .form-dialog-header h2 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.student-drawer .form-dialog-header p {
+  font-size: 10px;
+}
+
+.form-dialog-header h2 {
+  margin: 8px 0 0;
+  color: #292a45;
+  font-size: 20px;
+}
+
+.form-dialog-header p {
+  margin: 6px 0 0;
+  color: #8d90a5;
+  font-size: 12px;
+}
+
+.dialog-close {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: #f7f7fb;
+  color: #77798d;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+.form-dialog-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.student-drawer .form-dialog-body {
+  flex: initial;
+  overflow: visible;
+  padding: 0;
+}
+
+:host ::ng-deep .course-form-dialog form {
+  display: grid;
+  gap: 9px;
+}
+
+:host ::ng-deep .course-form-dialog label {
+  color: #565873;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+:host ::ng-deep .student-drawer label.field-label {
+  display: block;
+  margin: 18px 0 7px;
+  color: #55576d;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+:host ::ng-deep .course-form-dialog input,
+:host ::ng-deep .course-form-dialog select,
+:host ::ng-deep .course-form-dialog textarea {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid #e5e6ef;
+  border-radius: 8px;
+  color: #36374e;
+  font-size: 13px;
+  background: #fff;
+}
+
+:host ::ng-deep .student-drawer input.form-input {
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 11px;
+  font-size: 10px;
+}
+
+:host ::ng-deep .student-drawer input.form-input:focus {
+  box-shadow: 0 0 0 3px #f2f0ff;
+}
+
+:host ::ng-deep .course-form-dialog textarea {
+  min-height: 120px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+:host ::ng-deep .course-form-dialog input:focus,
+:host ::ng-deep .course-form-dialog select:focus,
+:host ::ng-deep .course-form-dialog textarea:focus {
+  border-color: #a69be9;
+  outline: 3px solid #f3f1ff;
+}
+
+:host ::ng-deep .field-error,
+.form-error {
+  color: #9e535b;
+  font-size: 11px;
+}
+
+:host ::ng-deep .student-drawer .field-error {
+  display: block;
+  margin-top: 5px;
+  color: #c45460;
+  font-size: 9px;
+}
+
+.form-error {
+  margin: 12px 0 0;
+}
+
+.form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
+  margin-top: 16px;
+}
+
+.drawer-actions {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid #f0f0f5;
+}
+
+.form-actions .refresh-button,
+.form-actions .create-button {
+  min-height: 38px;
+}
+
+.form-actions .refresh-button {
+  padding: 0 13px;
+  border: 1px solid #e7e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #565873;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.form-actions .create-button {
+  padding: 0 15px;
+  border: 0;
+  border-radius: 8px;
+  background: #6959d9;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.form-actions .primary-button {
+  min-width: 126px;
+  min-height: 39px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 8px;
+  background: #6959d9;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.form-actions .primary-button:hover:not(:disabled) {
+  background: #5848c8;
+}
+
+.form-actions .secondary-button {
+  min-height: 39px;
+  padding: 0 15px;
+  border: 1px solid #e8e9f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #77798d;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.form-actions .secondary-button:hover:not(:disabled) {
+  background: #fafafd;
+}
+
+.form-actions button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(20px);
+    opacity: 0.7;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 520px) {
+  .student-drawer {
+    padding: 24px 19px;
+  }
+}

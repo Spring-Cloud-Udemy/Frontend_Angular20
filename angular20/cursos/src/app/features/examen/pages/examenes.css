@@ -19,23 +19,12 @@
   gap: 20px;
 }
 
-.header-actions,
-.form-actions {
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 9px;
-}
-
-.header-actions {
   flex-wrap: wrap;
   justify-content: flex-end;
-}
-
-.eyebrow {
-  color: #7162d3;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
+  gap: 9px;
 }
 
 h1,
@@ -56,36 +45,6 @@ h1 {
   margin-top: 7px;
   color: #8d90a5;
   font-size: 13px;
-}
-
-.refresh-button,
-.error-panel button {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 15px;
-  border: 1px solid #e7e8f0;
-  border-radius: 8px;
-  background: #fff;
-  color: #565873;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.create-button {
-  display: inline-flex;
-  min-height: 40px;
-  align-items: center;
-  justify-content: center;
-  padding: 0 15px;
-  border: 1px solid #6655d9;
-  border-radius: 8px;
-  background: #6655d9;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
 }
 
 .edit-course-button,
@@ -120,23 +79,6 @@ h1 {
   opacity: 0.6;
 }
 
-.create-button:hover:not(:disabled) {
-  border-color: #5442c7;
-  background: #5442c7;
-}
-
-.refresh-button:hover:not(:disabled),
-.error-panel button:hover {
-  border-color: #c9c3f2;
-  color: #6151c9;
-}
-
-.refresh-button:disabled {
-  cursor: wait;
-  opacity: 0.7;
-}
-
-.refresh-button svg,
 .search-field svg,
 .course-icon svg,
 .course-stats svg {
@@ -381,7 +323,7 @@ h1 {
   font-size: 13px;
 }
 
-.empty-state > span:last-child {
+.empty-state>span:last-child {
   font-size: 11px;
 }
 
@@ -430,9 +372,23 @@ h1 {
 }
 
 .error-panel button {
+  display: inline-flex;
   flex: 0 0 auto;
-  border-color: #efdadd;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  border: 1px solid #efdadd;
+  border-radius: 8px;
+  background: #fff;
   color: #a64c56;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.error-panel button:hover {
+  border-color: #c9c3f2;
+  color: #6151c9;
 }
 
 .notice {
@@ -458,107 +414,6 @@ h1 {
 
 .action-error {
   color: #9e535b;
-}
-
-.form-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 1300;
-  display: grid;
-  place-items: center;
-  padding: 20px;
-  background: #20233c66;
-}
-
-.course-form-dialog {
-  width: min(100%, 460px);
-  padding: 24px;
-  border: 1px solid #ededf4;
-  border-radius: 14px;
-  background: #fff;
-  box-shadow: 0 18px 60px #20233c29;
-}
-
-.form-dialog-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 22px;
-}
-
-.form-dialog-header h2 {
-  margin-top: 8px;
-  color: #292a45;
-  font-size: 20px;
-}
-
-.form-dialog-header p {
-  margin-top: 6px;
-  color: #8d90a5;
-  font-size: 12px;
-}
-
-.dialog-close {
-  width: 32px;
-  height: 32px;
-  border: 0;
-  border-radius: 8px;
-  background: #f7f7fb;
-  color: #77798d;
-  font-size: 22px;
-}
-
-.course-form-dialog form {
-  display: grid;
-  gap: 9px;
-}
-
-.course-form-dialog label {
-  color: #565873;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.course-form-dialog input,
-.course-form-dialog select,
-.course-form-dialog textarea {
-  min-height: 42px;
-  padding: 0 12px;
-  border: 1px solid #e5e6ef;
-  border-radius: 8px;
-  color: #36374e;
-  font-size: 13px;
-  background: #fff;
-}
-
-.course-form-dialog textarea {
-  min-height: 120px;
-  padding: 10px 12px;
-  resize: vertical;
-}
-
-.course-form-dialog input:focus,
-.course-form-dialog select:focus,
-.course-form-dialog textarea:focus {
-  border-color: #a69be9;
-  outline: 3px solid #f3f1ff;
-}
-
-.field-error,
-.form-error {
-  color: #9e535b;
-  font-size: 11px;
-}
-
-.form-actions {
-  justify-content: flex-end;
-  margin-top: 12px;
-}
-
-.form-actions .refresh-button,
-.form-actions .create-button {
-  min-height: 38px;
 }
 
 @keyframes spin {
@@ -601,23 +456,7 @@ h1 {
   }
 }
 
-@media (max-width: 1080px) {
-  .courses-page {
-    width: 100%;
-  }
-}
-
-@media (max-width: 760px) {
-  .courses-page {
-    width: 100%;
-  }
-}
-
 @media (max-width: 420px) {
-  .page-header {
-    flex-direction: column;
-  }
-
   .overview {
     grid-template-columns: 1fr;
   }

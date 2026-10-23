@@ -3,13 +3,14 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { describeHttpError } from '../../../core/http/http-error.util';
+import { FormDialogComponent } from '../../../shared/modal/modal-form.component';
 import { Asignatura, AsignaturaInput } from '../models/asignatura.model';
 import { AsignaturaService } from '../services/asignatura.service';
 
 @Component({
   selector: 'app-asignaturas-page',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormDialogComponent],
   templateUrl: './asignaturas.html',
   styleUrl: './asignaturas.css',
 })

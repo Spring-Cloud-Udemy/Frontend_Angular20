@@ -1,0 +1,68 @@
+.eyebrow {
+  color: #7162d3;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.refresh-button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 15px;
+  border: 1px solid #e7e8f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #565873;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.refresh-button:hover:not(:disabled) {
+  border-color: #c9c3f2;
+  color: #6151c9;
+}
+
+.refresh-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.refresh-button svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.create-button {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 15px;
+  border: 1px solid #6655d9;
+  border-radius: 8px;
+  background: #6655d9;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-button:hover:not(:disabled) {
+  border-color: #5442c7;
+  background: #5442c7;
+}
+
+.create-button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}

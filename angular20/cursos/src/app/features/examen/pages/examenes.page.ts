@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { describeHttpError } from '../../../core/http/http-error.util';
+import { FormDialogComponent } from '../../../shared/modal/modal-form.component';
 import { AsignaturaCurso } from '../../asignaturas/models/asignatura-curso.model';
 import {
   EXAMEN_NOMBRE_MAX,
@@ -15,7 +16,7 @@ import { ExamenService } from '../services/examen.service';
 
 @Component({
   selector: 'app-examenes-page',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormDialogComponent],
   templateUrl: './examenes.html',
   styleUrl: './examenes.css',
 })

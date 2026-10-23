@@ -4,6 +4,7 @@ import { Component, PLATFORM_ID, computed, inject, signal } from '@angular/core'
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { API_BASE } from '../../../core/config/api.config';
+import { FormDialogComponent } from '../../../shared/modal/modal-form.component';
 import { Alumno } from '../models/alumno.model';
 import { AlumnoService } from '../services/alumno.service';
 
@@ -11,8 +12,9 @@ import { AlumnoService } from '../services/alumno.service';
 
 @Component({
   selector: 'app-alumno-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FormDialogComponent],
   templateUrl: './alumno.html',
+  styleUrl: './alumno.css',
 })
 export class AlumnoPage {
   private readonly alumnosService = inject(AlumnoService);

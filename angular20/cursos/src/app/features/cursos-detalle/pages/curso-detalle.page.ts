@@ -7,14 +7,12 @@ import { DialogModule } from 'primeng/dialog';
 import { describeHttpError } from '../../../core/http/http-error.util';
 import { Alumno } from '../../alumno/models/alumno.model';
 import { AlumnoStore } from '../../alumno/services/alumno.store';
-import { Examen } from '../../examen/models/examen.model';
-import { ExamenStore } from '../../examen/services/examen.store';
 import { Curso } from '../../cursos/models/curso.model';
 import { AsignaturaCurso } from '../../asignaturas/models/asignatura-curso.model';
 import { CursosService } from '../../cursos/services/cursos.service';
 import { CursosAsignaturasService } from '../../asignaturas/services/cursos-asignaturas.service';
 
-type Pestana = 'alumnos' | 'examenes' | 'asignaturas';
+type Pestana = 'alumnos' | 'asignaturas';
 
 @Component({
   selector: 'app-curso-detalle-page',
@@ -28,7 +26,6 @@ export class CursoDetallePage {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly cursosService = inject(CursosService);
   private readonly alumnoStore = inject(AlumnoStore);
-  private readonly examenStore = inject(ExamenStore);
   readonly cursosAsignaturasService = inject(CursosAsignaturasService);
 
   private readonly cursoId = Number(this.route.snapshot.paramMap.get('id'));
@@ -41,13 +38,11 @@ export class CursoDetallePage {
   readonly error = signal<string | null>(null);
   readonly alumnosError = signal<string | null>(null);
   readonly cursosError = signal<string | null>(null);
-  readonly examenesError = signal<string | null>(null);
   readonly notice = signal<string | null>(null);
   readonly tab = signal<Pestana>('alumnos');
 
   // Selección múltiple en las listas de "disponibles"
   readonly alumnosSeleccionados = signal<ReadonlySet<number>>(new Set());
-  readonly examenesSeleccionados = signal<ReadonlySet<number>>(new Set());
   readonly asignaturasSeleccionadas = signal<ReadonlySet<number>>(new Set());
   readonly dialogAsignaturasVisible = signal(false);
 
@@ -64,7 +59,6 @@ export class CursoDetallePage {
     const idsAsignados = new Set(curso.cursoAlumnos?.map((relacion) => relacion.alumnoId) ?? []);
     return this.alumnoStore.alumnos().filter((alumno) => idsAsignados.has(alumno.id));
   });
-  readonly examenesAsignados = computed(() => this.curso()?.examenes ?? []);
   readonly totalAsignaturas = computed(() =>
     this.cursosAsignaturasService.asignaturas().reduce((total, padre) => total + padre.hijos.length, 0),
   );
@@ -86,11 +80,6 @@ export class CursoDetallePage {
     return this.alumnoStore.alumnos().filter((alumno) => !ocupados.has(alumno.id));
   });
 
-  readonly examenesDisponibles = computed(() => {
-    const ocupados = new Set(this.examenesAsignados().map((e) => e.id));
-    return this.examenStore.examenes().filter((e) => !ocupados.has(e.id));
-  });
-
   constructor() {
     if (!Number.isSafeInteger(this.cursoId) || this.cursoId < 1) {
       this.error.set('El identificador del curso no es válido.');
@@ -109,8 +98,6 @@ export class CursoDetallePage {
     this.cursosAsignaturasService.cargar(this.cursoId);
     this.alumnosError.set(null);
     this.cursosError.set(null);
-    this.examenesError.set(null);
-
     forkJoin({
       curso: this.cursosService.ver(this.cursoId),
       cursos: this.cursosService.listar().pipe(
@@ -122,12 +109,6 @@ export class CursoDetallePage {
       alumnos: this.alumnoStore.load().pipe(
         catchError((error: unknown) => {
           this.alumnosError.set(describeHttpError(error));
-          return of([]);
-        }),
-      ),
-      examenes: this.examenStore.load().pipe(
-        catchError((error: unknown) => {
-          this.examenesError.set(describeHttpError(error));
           return of([]);
         }),
       ),
@@ -206,10 +187,6 @@ export class CursoDetallePage {
     this.alumnosSeleccionados.update((actual) => this.alternar(actual, id));
   }
 
-  toggleExamen(id: number): void {
-    this.examenesSeleccionados.update((actual) => this.alternar(actual, id));
-  }
-
   plural(cantidad: number, singular: string, pluralForma: string): string {
     return cantidad === 1 ? singular : pluralForma;
   }
@@ -237,32 +214,6 @@ export class CursoDetallePage {
     this.ejecutar(
       this.cursosService.eliminarAlumno(this.cursoId, alumno),
       'Alumno retirado del curso.',
-    );
-  }
-
-  // ---------- Exámenes ----------
-
-  asignarExamenes(): void {
-    const elegidos = this.examenesDisponibles().filter((e) => this.examenesSeleccionados().has(e.id));
-    if (!elegidos.length) {
-      return;
-    }
-
-    this.ejecutar(
-      this.cursosService.asignarExamenes(this.cursoId, elegidos),
-      elegidos.length === 1 ? 'Examen asignado al curso.' : `${elegidos.length} exámenes asignados al curso.`,
-      () => this.examenesSeleccionados.set(new Set()),
-    );
-  }
-
-  quitarExamen(examen: Examen): void {
-    if (!window.confirm(`¿Quitar el examen "${examen.nombre}" de este curso?`)) {
-      return;
-    }
-
-    this.ejecutar(
-      this.cursosService.eliminarExamen(this.cursoId, examen),
-      'Examen retirado del curso.',
     );
   }
 

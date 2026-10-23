@@ -1,5 +1,4 @@
 import { Alumno } from '../../alumno/models/alumno.model';
-import { Examen } from '../../examen/models/examen.model';
 
 export interface CursoAlumno {
   id?: number;
@@ -12,7 +11,6 @@ export interface Curso {
   createAT?: string;
   cursoAlumnos?: CursoAlumno[];
   alumnos?: Alumno[];
-  examenes?: Examen[];
 }
 
 export interface Page<T> {

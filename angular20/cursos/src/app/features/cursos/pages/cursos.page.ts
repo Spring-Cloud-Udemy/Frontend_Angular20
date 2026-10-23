@@ -4,12 +4,13 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { describeHttpError } from '../../../core/http/http-error.util';
+import { FormDialogComponent } from '../../../shared/modal/modal-form.component';
 import { Curso } from '../models/curso.model';
 import { CursosService } from '../services/cursos.service';
 
 @Component({
   selector: 'app-cursos-page',
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, FormDialogComponent],
   templateUrl: './cursos.html',
   styleUrl: './cursos.css',
 })
@@ -186,7 +187,4 @@ export class CursosPage {
     return curso.alumnos?.length ?? curso.cursoAlumnos?.length ?? 0;
   }
 
-  examCount(curso: Curso): number {
-    return curso.examenes?.length ?? 0;
-  }
 }

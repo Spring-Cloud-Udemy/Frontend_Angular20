@@ -131,26 +131,17 @@
 </div>
 
 @if (modalOpen()) {
-  <div class="form-backdrop">
-    <section
-      class="course-form-dialog"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="asignatura-form-title"
-    >
-      <header class="form-dialog-header">
-        <div>
-          <span class="eyebrow">CATÁLOGO ACADÉMICO</span>
-          <h2 id="asignatura-form-title">{{ editing() ? 'Editar asignatura' : 'Nueva asignatura' }}</h2>
-          <p>
-            {{ editing()
-              ? 'Actualiza el nombre o la asignatura padre.'
-              : 'Completa el nombre. El padre es opcional.' }}
-          </p>
-        </div>
-        <button class="dialog-close" type="button" aria-label="Cerrar" (click)="closeModal()">×</button>
-      </header>
-      <form [formGroup]="asignaturaForm" (ngSubmit)="guardar()">
+  <app-form-dialog
+    [abierto]="modalOpen()"
+    [titulo]="editing() ? 'Editar asignatura' : 'Nueva asignatura'"
+    [subtitulo]="editing() ? 'Actualiza el nombre o la asignatura padre.' : 'Completa el nombre. El padre es opcional.'"
+    [textoConfirmar]="editing() ? 'Guardar cambios' : 'Crear asignatura'"
+    [guardando]="saving()"
+    [error]="formError()"
+    formId="asignatura-form"
+    (cerrar)="closeModal()"
+  >
+      <form id="asignatura-form" [formGroup]="asignaturaForm" (ngSubmit)="guardar()">
         <label for="asignatura-nombre">Nombre de la asignatura</label>
         <input
           id="asignatura-nombre"
@@ -170,17 +161,6 @@
             <option [ngValue]="padre.id">{{ padre.nombre }}</option>
           }
         </select>
-
-        @if (formError()) {
-          <p class="form-error" role="alert">{{ formError() }}</p>
-        }
-        <div class="form-actions">
-          <button class="refresh-button" type="button" [disabled]="saving()" (click)="closeModal()">Cancelar</button>
-          <button class="create-button" type="submit" [disabled]="saving()">
-            {{ saving() ? 'Guardando...' : (editing() ? 'Guardar cambios' : 'Crear asignatura') }}
-          </button>
-        </div>
       </form>
-    </section>
-  </div>
+  </app-form-dialog>
 }

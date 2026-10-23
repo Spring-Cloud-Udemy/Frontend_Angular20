@@ -1,0 +1,57 @@
+@if (abierto()) {
+  <div
+    class="form-backdrop"
+    [class.drawer-backdrop]="variante() === 'panel'"
+    (click)="onBackdropClick()"
+    (keydown.escape)="onEscape()"
+  >
+    <section
+      class="course-form-dialog"
+      [class.student-drawer]="variante() === 'panel'"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="form-dialog-title"
+      (click)="$event.stopPropagation()"
+    >
+      <header class="form-dialog-header">
+        <div>
+          <span class="eyebrow">{{ etiqueta() }}</span>
+          <h2 id="form-dialog-title">{{ titulo() }}</h2>
+          @if (subtitulo()) {
+            <p>{{ subtitulo() }}</p>
+          }
+        </div>
+        <button class="dialog-close" type="button" aria-label="Cerrar" (click)="cerrar.emit()">×</button>
+      </header>
+
+      <div class="form-dialog-body">
+        <ng-content />
+      </div>
+
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+
+      <div class="form-actions" [class.drawer-actions]="variante() === 'panel'">
+        <button
+          class="refresh-button"
+          [class.secondary-button]="variante() === 'panel'"
+          type="button"
+          [disabled]="guardando()"
+          (click)="cerrar.emit()"
+        >
+          Cancelar
+        </button>
+        <button
+          class="create-button"
+          [class.primary-button]="variante() === 'panel'"
+          type="submit"
+          [attr.form]="formId()"
+          [disabled]="guardando()"
+        >
+          {{ guardando() ? 'Guardando...' : textoConfirmar() }}
+        </button>
+      </div>
+    </section>
+  </div>
+}

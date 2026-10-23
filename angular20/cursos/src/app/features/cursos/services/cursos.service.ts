@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 import { CommonService } from '../../../shared/common.service';
 import { Curso } from '../models/curso.model';
 import { Alumno } from '../../alumno/models/alumno.model';
-import { Examen } from '../../examen/models/examen.model';
 import { API_ENDPOINTS } from '../../../core/config/api.config';
 
 @Injectable({ providedIn: 'root' })
@@ -29,14 +28,6 @@ export class CursosService extends CommonService<Curso> {
 
   obtenerAlumnosPorAsignatura(asignaturaId: number): Observable<Alumno[]> {
     return this.http.get<Alumno[]>(`${this.baseEndpoint}/asignatura/${asignaturaId}/alumnos`);
-  }
-
-  asignarExamenes(cursoId: number, examenes: Examen[]): Observable<Curso> {
-    return this.http.put<Curso>(`${this.baseEndpoint}/${cursoId}/asignar-examenes`, examenes);
-  }
-
-  eliminarExamen(cursoId: number, examen: Examen): Observable<Curso> {
-    return this.http.put<Curso>(`${this.baseEndpoint}/${cursoId}/eliminar-examen`, examen);
   }
 
   eliminarCursoAlumnoPorId(cursoAlumnoId: number): Observable<void> {

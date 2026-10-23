@@ -4,6 +4,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { finalize } from 'rxjs';
 import { describeHttpError } from '../../../core/http/http-error.util';
+import { FormDialogComponent } from '../../../shared/modal/modal-form.component';
 import { Alumno } from '../../alumno/models/alumno.model';
 import { AlumnoService } from '../../alumno/services/alumno.service';
 import { Asignatura } from '../../asignaturas/models/asignatura.model';
@@ -14,13 +15,15 @@ import { ExamenService } from '../../examen/services/examen.service';
 import { Respuesta, RespuestaInput } from '../models/respuesta.model';
 import { RespuestasService } from '../services/respuestas.service';
 
+// se inyecta el hmlt y css en el componente para que sea standalone y no dependa de un módulo
 @Component({
   selector: 'app-respuestas',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormDialogComponent],
   templateUrl: './respuestas.html',
   styleUrl: './respuestas.css',
 })
+
 export class RespuestasPage {
   private readonly respuestasService = inject(RespuestasService);
   private readonly asignaturaService = inject(AsignaturaService);

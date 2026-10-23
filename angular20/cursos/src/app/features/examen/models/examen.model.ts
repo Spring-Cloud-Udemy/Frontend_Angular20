@@ -28,7 +28,7 @@ export interface Examen {
   id: number;
   nombre: string;
   createAT: string;
-  asignatura: Asignatura;
+  asignatura: Asignatura | null;
   preguntas: Pregunta[];
   respondido: boolean;
 }
